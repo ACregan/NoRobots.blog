@@ -6,20 +6,22 @@ import { RichText } from "@atproto/api";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "No-Robots" },
+    { title: "NoRobots.blog" },
     {
       name: "description",
       content:
-        "Creative writing and news from the front line of the resistance. 100% Human-produced content.",
+        "Creative writing and news from the front line of the machine resistance. 100% Human-produced content. No Language Models were used in the production of this weblog.",
     },
   ];
 }
 
 export async function loader({ params }: Route.LoaderArgs) {
   //https://docs.bsky.app/docs/api/com-atproto-repo-list-records
-  const res = await fetch(
-    "https://bsky.social/xrpc/com.atproto.repo.listRecords?repo=anthonycregan.dev&collection=com.whtwnd.blog.entry"
-  );
+  const url =
+    "https://rhizopogon.us-west.host.bsky.network/xrpc/com.atproto.repo.listRecords?repo=norobots.blog&collection=com.whtwnd.blog.entry";
+  //"https://rhizopogon.us-west.host.bsky.network/xrpc/com.atproto.repo.listRecords?repo=did%3Aplc%3Ac3zne4g2kcfjgdzbeentnj57&collection=com.whtwnd.blog.entry";
+  //"https://bsky.social/xrpc/com.atproto.repo.listRecords?repo=anthonycregan.dev&collection=com.whtwnd.blog.entry"
+  const res = await fetch(url);
   const articles = await res.json();
   console.log("ARTICLES", articles);
   console.log("ARTICLES[0]", articles.records[0]);
@@ -37,12 +39,11 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const result = loaderData;
-  console.log("result", result);
-  const richTextContent = new RichText({ text: result.content });
-  console.log("RTC", richTextContent);
+  const { title, content } = loaderData;
+  console.log("result", loaderData);
+  // const richTextContent = new RichText({ text: result.content });
   const markdownConverted = marked.parse(
-    result.content
+    content
       .replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, "")
       .replaceAll(`\\n`, "")
   ) as string;
@@ -51,20 +52,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   console.log("markdownConvertedAndParsed ", markdownConvertedAndParsed);
   return (
     <div>
-      {/* <h1>JSON STATHAM</h1>
-      <textarea defaultValue={JSON.stringify(result)}></textarea>
-      <textarea defaultValue={result.content}></textarea>
-      <p>Basic Content</p>
-      {result.content}
-      <hr />
-      <p>Rich Text</p>
-      {richTextContent.text}
-      <hr />
-      <p>Marked Converted</p>
-      {markdownConverted}
-      <hr /> */}
-      <p>Marked Converted and Parsed</p>
-      {markdownConvertedAndParsed}
+      <h1>{title}</h1>
+      <div id="content">{markdownConvertedAndParsed}</div>
     </div>
   );
 }
