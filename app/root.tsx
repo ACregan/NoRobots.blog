@@ -38,7 +38,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <header>
           <h1>NoRobots.blog</h1>
         </header>
-        <main>{children}</main>
+        <main>
+          <div className="content-container">{children}</div>
+        </main>
         <ScrollRestoration />
         <Scripts />
       </body>

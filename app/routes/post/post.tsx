@@ -3,6 +3,7 @@ import htmlParser from "html-react-parser";
 import type { Route } from "./+types/post";
 //https://www.npmjs.com/package/@atproto/api
 import { RichText } from "@atproto/api";
+import styles from "./post.module.css";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -16,7 +17,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ params }: Route.LoaderArgs) {
-  console.log("PARAMS", params);
+  // console.log("PARAMS", params);
   //https://docs.bsky.app/docs/api/com-atproto-repo-list-records
   const url =
     "https://rhizopogon.us-west.host.bsky.network/xrpc/com.atproto.repo.listRecords?repo=norobots.blog&collection=com.whtwnd.blog.entry";
@@ -24,15 +25,15 @@ export async function loader({ params }: Route.LoaderArgs) {
   //"https://bsky.social/xrpc/com.atproto.repo.listRecords?repo=anthonycregan.dev&collection=com.whtwnd.blog.entry"
   const res = await fetch(url);
   const articles = await res.json();
-  console.log("ARTICLES", articles);
-  console.log("ARTICLES[0]", articles.records[0]);
+  // console.log("ARTICLES", articles);
+  // console.log("ARTICLES[0]", articles.records[0]);
   if (
     articles.records &&
     articles.records.length > 0 &&
     articles.records[0].value
   ) {
     const articlesList = articles.records[0].value;
-    console.log("ARTICLES LIST", articlesList);
+    // console.log("ARTICLES LIST", articlesList);
     return {
       ...articlesList,
       params: params,
@@ -56,7 +57,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
   console.log("markdownConvertedAndParsed ", markdownConvertedAndParsed);
   return (
     <div>
-      <h1>{title}</h1>
+      <h1 className={styles.articleHeader}>{title}</h1>
       <div id="content">{markdownConvertedAndParsed}</div>
     </div>
   );
