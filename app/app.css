@@ -1,6 +1,15 @@
+html {
+  font-size: 62.5%;
+}
+
 html,
 body {
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+  font-family: "InterVariable", "Inter";
+  @media (prefers-color-scheme: light) {
+    color-scheme: light;
   }
+}
+
+body {
+  font-size: 1.6rem;
 }
