@@ -6,10 +6,15 @@ body > header {
   overflow: hidden;
   background: yellow;
   height: 8rem;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-body > header > h1 {
+body > header > div.content-container > h1 {
   font-size: 2.2rem;
-  margin: 2.6rem 1.8rem;
+  margin: 2.6rem 0;
   padding: 0;
 }
 
@@ -21,6 +26,7 @@ body > main {
   align-items: center;
 }
 
+body > header > div.content-container,
 body > main > div.content-container {
   width: 100rem;
 }

@@ -4,7 +4,7 @@ html {
 
 html,
 body {
-  font-family: "InterVariable", "Inter";
+  font-family: "InterVariable", "Inter", sans-serif;
   @media (prefers-color-scheme: light) {
     color-scheme: light;
   }

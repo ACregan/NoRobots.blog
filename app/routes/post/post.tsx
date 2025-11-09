@@ -35,6 +35,7 @@ export async function loader({ params }: Route.LoaderArgs) {
     const articlesList = articles.records[0].value;
     // console.log("ARTICLES LIST", articlesList);
     return {
+      articles: articles,
       ...articlesList,
       params: params,
     };

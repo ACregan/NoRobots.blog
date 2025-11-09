@@ -36,7 +36,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <header>
-          <h1>NoRobots.blog</h1>
+          <div className="content-container">
+            <h1>NoRobots.blog</h1>
+          </div>
         </header>
         <main>
           <div className="content-container">{children}</div>
