@@ -1,6 +1,24 @@
 html {
   font-size: 62.5%;
 }
+/* OVER 1080p screens*/
+@media only screen and (min-width: 1921px) {
+  html {
+    font-size: 80%;
+  }
+}
+/* HALF WAY BETWEEN 1080p and 4k screens*/
+@media only screen and (min-width: 2880px) {
+  html {
+    font-size: 100%;
+  }
+}
+/* OVER 4k screens*/
+@media only screen and (min-width: 3840px) {
+  html {
+    font-size: 133%;
+  }
+}
 
 html,
 body {
