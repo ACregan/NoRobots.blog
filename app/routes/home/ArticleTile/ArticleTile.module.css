@@ -4,6 +4,9 @@
   display: inline-flex;
   width: 50%;
 }
+.tileLink:hover .articleTitle {
+  text-decoration: underline;
+}
 .articleTitle {
   margin-bottom: 0;
 }
@@ -21,6 +24,7 @@
 }
 .contentPreviewContainer {
   height: 10rem;
+  font-size: 1.6rem;
   overflow: hidden;
   margin-top: 2rem;
 }

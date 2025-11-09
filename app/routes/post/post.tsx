@@ -4,6 +4,7 @@ import type { Route } from "./+types/post";
 //https://www.npmjs.com/package/@atproto/api
 import { RichText } from "@atproto/api";
 import styles from "./post.module.css";
+import type { Article } from "~/types/types";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,7 +18,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export async function loader({ params }: Route.LoaderArgs) {
-  // console.log("PARAMS", params);
+  const { articleId } = params;
   //https://docs.bsky.app/docs/api/com-atproto-repo-list-records
   const url =
     "https://rhizopogon.us-west.host.bsky.network/xrpc/com.atproto.repo.listRecords?repo=norobots.blog&collection=com.whtwnd.blog.entry";
@@ -25,29 +26,30 @@ export async function loader({ params }: Route.LoaderArgs) {
   //"https://bsky.social/xrpc/com.atproto.repo.listRecords?repo=anthonycregan.dev&collection=com.whtwnd.blog.entry"
   const res = await fetch(url);
   const articles = await res.json();
-  // console.log("ARTICLES", articles);
-  // console.log("ARTICLES[0]", articles.records[0]);
-  if (
-    articles.records &&
-    articles.records.length > 0 &&
-    articles.records[0].value
-  ) {
-    const articlesList = articles.records[0].value;
+  if (articles.records && articles.records.length > 0 && articleId) {
+    const articlesList = articles.records;
+    const requestedArticle = articlesList.filter(
+      (article: Article) => article.cid === articleId
+    );
     // console.log("ARTICLES LIST", articlesList);
+    console.log("requestedArticle from LIST", requestedArticle);
     return {
-      articles: articles,
-      ...articlesList,
+      article: requestedArticle[0],
       params: params,
     };
   } else {
-    return [];
+    return {
+      article: [],
+      params: {},
+    };
   }
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {
-  const { title, content } = loaderData;
+  const { article, params } = loaderData;
+  const { title, content } = article.value;
   console.log("loaderData", loaderData);
-  // const richTextContent = new RichText({ text: result.content });
+  // // const richTextContent = new RichText({ text: result.content });
   const markdownConverted = marked.parse(
     content
       .replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, "")
@@ -59,7 +61,9 @@ export default function Post({ loaderData }: Route.ComponentProps) {
   return (
     <div>
       <h1 className={styles.articleHeader}>{title}</h1>
-      <div id="content">{markdownConvertedAndParsed}</div>
+      <div className={styles.contentContainer}>
+        {markdownConvertedAndParsed}
+      </div>
     </div>
   );
 }

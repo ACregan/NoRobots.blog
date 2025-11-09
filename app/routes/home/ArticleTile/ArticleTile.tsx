@@ -28,17 +28,21 @@ const ArticleTile = ({ cid, title, content, createdAt }: ArticleTileProps) => {
   };
   const dateObject = new Date(createdAt);
   //@ts-ignore
-  const customFormatted = new Intl.DateTimeFormat("en-GB", options).format(
+  const customFormattedDate = new Intl.DateTimeFormat("en-GB", options).format(
     dateObject
   );
-  console.log(customFormatted);
+
+  // Trim content to add ellipsis
+  const truncatedContent = content.substring(0, 240);
   return (
     <a href={`/post/${cid}`} className={style.tileLink}>
       <div>
         <h2 className={style.articleTitle}>{title}</h2>
         <p className={style.authorName}>By Hugh Mann</p>
-        <p className={style.createdDate}>{customFormatted}</p>
-        <div className={style.contentPreviewContainer}>{content}</div>
+        <p className={style.createdDate}>{customFormattedDate}</p>
+        <div
+          className={style.contentPreviewContainer}
+        >{`${truncatedContent} ...`}</div>
       </div>
     </a>
   );

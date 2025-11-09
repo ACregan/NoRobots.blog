@@ -2,6 +2,7 @@
 // import htmlParser from "html-react-parser";
 import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
+import type { Article } from "~/types/types";
 //https://www.npmjs.com/package/@atproto/api
 // import { RichText } from "@atproto/api";
 
@@ -57,27 +58,14 @@ export async function loader({ params }: Route.LoaderArgs) {
 //   );
 // };
 
-type ArticleValue = {
-  $type: string;
-  content: string;
-  createdAt: Date;
-  theme: string;
-  title: string;
-  visibility: string;
-};
-type Article = {
-  cid: string;
-  uri: string;
-  value: ArticleValue;
-};
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { articles } = loaderData;
-  console.log("articles", articles);
   return (
     <div>
       {articles.map((article: Article) => {
         return (
           <ArticleTile
+            key={article.cid}
             cid={article.cid}
             title={article.value.title}
             content={article.value.content}

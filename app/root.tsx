@@ -11,6 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import "./assets/fonts/inter/inter.css";
 import "./root.css";
+import { PerpetualSummerSVG } from "./components/SvgImage/SvgImage";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -37,15 +38,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <header>
           <div className="content-container">
-            <h1>NoRobots.blog</h1>
+            <a href="/">
+              <h1>NoRobots.blog</h1>
+            </a>
           </div>
         </header>
         <main>
           <div className="content-container">{children}</div>
         </main>
         <footer>
-          <div className="content-container">
-            <p>This is the footer</p>
+          <div className="footer-container">
+            <div className="logo">
+              <PerpetualSummerSVG fill="white" />
+            </div>
           </div>
         </footer>
         <ScrollRestoration />

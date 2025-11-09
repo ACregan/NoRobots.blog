@@ -17,10 +17,18 @@ body > header {
   justify-content: center;
   align-items: center;
 }
-body > header > div.content-container > h1 {
+body > header > div.content-container > a {
+  text-decoration: none;
+  color: black;
+}
+body > header > div.content-container > a > h1 {
   font-size: 2.2rem;
   margin: 2.6rem 0;
   padding: 0;
+  display: inline-block;
+}
+body > header > div.content-container > a:hover > h1 {
+  text-decoration: underline;
 }
 
 body > main {
@@ -46,6 +54,16 @@ body > footer {
 
 body > header > div.content-container,
 body > main > div.content-container,
-body > footer > div.content-container {
+body > footer > div.footer-container {
   width: 100rem;
+}
+
+body > footer > div.footer-container > div.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: var(--footerElementHeight);
+}
+body > footer > div.footer-container > div.logo > svg {
+  height: 8rem;
 }
