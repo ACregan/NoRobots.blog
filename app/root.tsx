@@ -43,6 +43,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <main>
           <div className="content-container">{children}</div>
         </main>
+        <footer>
+          <div className="content-container">
+            <p>This is the footer</p>
+          </div>
+        </footer>
         <ScrollRestoration />
         <Scripts />
       </body>

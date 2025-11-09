@@ -35,7 +35,7 @@ const ArticleTile = ({ cid, title, content, createdAt }: ArticleTileProps) => {
   return (
     <a href={`/post/${cid}`} className={style.tileLink}>
       <div>
-        <h2>{title}</h2>
+        <h2 className={style.articleTitle}>{title}</h2>
         <p className={style.authorName}>By Hugh Mann</p>
         <p className={style.createdDate}>{customFormatted}</p>
         <div className={style.contentPreviewContainer}>{content}</div>

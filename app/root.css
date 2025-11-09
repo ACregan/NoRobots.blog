@@ -1,3 +1,8 @@
+:root {
+  --headerElementHeight: 8rem;
+  --footerElementHeight: 16rem;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -5,7 +10,7 @@ body {
 body > header {
   overflow: hidden;
   background: yellow;
-  height: 8rem;
+  height: var(--headerElementHeight);
   position: sticky;
   top: 0;
   display: flex;
@@ -23,10 +28,24 @@ body > main {
   padding: 1rem 1.8rem;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  min-height: calc(
+    100vh - var(--headerElementHeight) - var(--footerElementHeight)
+  );
+  box-sizing: border-box;
+}
+body > footer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: black;
+  color: white;
+  height: var(--footerElementHeight);
+  overflow: hidden;
 }
 
 body > header > div.content-container,
-body > main > div.content-container {
+body > main > div.content-container,
+body > footer > div.content-container {
   width: 100rem;
 }

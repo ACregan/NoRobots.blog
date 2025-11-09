@@ -4,15 +4,23 @@
   display: inline-flex;
   width: 50%;
 }
-.contentPreviewContainer {
-  height: 10rem;
-  overflow: hidden;
-  margin-top: 2rem;
+.articleTitle {
+  margin-bottom: 0;
 }
 .authorName,
 .createdDate {
   margin: 0;
-  font-weight: 600;
   font-size: 1.2rem;
-  color: rgb(180, 180, 180);
+  /* color: rgb(180, 180, 180); */
+}
+.authorName {
+  font-weight: 600;
+}
+.createdDate {
+  font-weight: 300;
+}
+.contentPreviewContainer {
+  height: 10rem;
+  overflow: hidden;
+  margin-top: 2rem;
 }
