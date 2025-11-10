@@ -37,7 +37,7 @@ export async function loader({ params }: Route.LoaderArgs) {
       requestedArticle[0].value.content.indexOf("<!--_AUTHOR::") + 13;
     // console.log("START INDEX = ", extractedAuthorDataStartIndex);
     const extractedAuthorDataEndIndex =
-      requestedArticle[0].value.content.indexOf("-->\n");
+      requestedArticle[0].value.content.indexOf("-->");
     // console.log("END INDEX = ", extractedAuthorDataEndIndex);
     const extractedAuthorData = requestedArticle[0].value.content.substring(
       extractedAuthorDataStartIndex,
