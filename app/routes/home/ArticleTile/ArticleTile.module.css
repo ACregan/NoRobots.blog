@@ -36,3 +36,44 @@
   overflow: hidden;
   margin-top: 2rem;
 }
+
+.moreButton {
+  font-family: "InterVariable", "Inter", sans-serif;
+  font-weight: 600;
+  background: black;
+  border: none;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin-top: 1rem;
+  float: right;
+  border-radius: 0.3rem;
+}
+.tileLink:hover .moreButton > span {
+  color: yellow;
+}
+.tileLink:hover .moreButton > svg {
+  fill: yellow;
+}
+.moreButton > span {
+  margin-right: 1rem;
+}
+.moreButton > svg {
+  height: 1.5rem;
+}
+
+@media screen and (max-width: 799px) {
+  .tileLink {
+    margin: 0 2rem;
+    width: calc(100% - 4rem);
+  }
+
+  .tileLink:nth-of-type(odd) {
+    padding: 0;
+  }
+  .tileLink:nth-of-type(even) {
+    padding: 0;
+  }
+}

@@ -1,3 +1,4 @@
+import { RightArrow } from "~/components/SvgImage/SvgImage";
 import style from "./ArticleTile.module.css";
 
 type ArticleTileProps = {
@@ -6,15 +7,6 @@ type ArticleTileProps = {
   content: string;
   createdAt: Date;
   author?: string;
-};
-type DateTimeFormatOptions = {
-  year: string;
-  month: string;
-  day: string;
-  hour: string;
-  minute: string;
-  second: string;
-  timeZoneName: string;
 };
 
 const ArticleTile = ({
@@ -49,6 +41,9 @@ const ArticleTile = ({
         <div
           className={style.contentPreviewContainer}
         >{`${truncatedContent} ...`}</div>
+        <button className={style.moreButton}>
+          <span>READ MORE</span> <RightArrow fill="white" />
+        </button>
       </div>
     </a>
   );

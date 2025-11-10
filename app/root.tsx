@@ -45,6 +45,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <NoRobotsLogo />
               <h1>NoRobots.blog</h1>
             </a>
+            <ul>
+              <li>Tech.</li>
+              <li>Creativity.</li>
+              <li>Travel.</li>
+            </ul>
           </div>
         </header>
         <main>

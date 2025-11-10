@@ -1,4 +1,4 @@
-const PerpetualSummerSVG = ({ fill = "white" }: { fill: string }) => {
+const PerpetualSummerSVG = ({ fill = "white" }: { fill?: string }) => {
   return (
     <svg role="image" x="0px" y="0px" viewBox="0 0 1400 400">
       <g fill={fill}>
@@ -174,4 +174,20 @@ const NoRobotsLogo = () => (
   </svg>
 );
 
-export { PerpetualSummerSVG, NoRobotsLogo };
+const RightArrow = ({ fill = "black" }: { fill?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlSpace="preserve"
+      fill={fill}
+      version="1.1"
+      viewBox="0 0 8 8"
+    >
+      <path d="M6.941 5.04 3.206 1.304 4.242.268l3.736 3.735z"></path>
+      <path d="M.024 3.157h6.375V4.84H.024z"></path>
+      <path d="M7.983 3.997 4.248 7.734 3.212 6.7 6.947 2.96z"></path>
+    </svg>
+  );
+};
+
+export { PerpetualSummerSVG, NoRobotsLogo, RightArrow };
