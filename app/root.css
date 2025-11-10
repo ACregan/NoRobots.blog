@@ -130,4 +130,22 @@ body > footer > div.footer-container > div.footer-col3 > svg {
   body > footer {
     padding: 0 1rem;
   }
+
+  body > header > div.content-container > a > h1 {
+    font-size: 2.2rem;
+  }
+  body > header > div.content-container > a > svg {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+  body > header > div.content-container > ul > li {
+    font-size: 1.1rem;
+  }
+
+  body > footer > div.footer-container {
+    grid-template-columns: 50% 50%;
+  }
+  body > footer > div.footer-container > div.footer-col2 {
+    display: none;
+  }
 }

@@ -37,6 +37,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        ></link>
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        ></link>
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        ></link>
+        <link rel="manifest" href="/site.webmanifest"></link>
       </head>
       <body>
         <header>
@@ -64,7 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 No Language Models were used in the production of this weblog.
               </p>
             </div>
-            <div></div>
+            <div className="footer-col2"></div>
             <div className="footer-col3">
               <PerpetualSummerSVG fill="white" />
             </div>
