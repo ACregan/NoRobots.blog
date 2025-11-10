@@ -2,11 +2,19 @@
   text-decoration: none;
   color: black;
   display: inline-flex;
-  width: 50%;
+  width: calc(50% - 1rem);
 }
 .tileLink:hover .articleTitle {
   text-decoration: underline;
 }
+
+.tileLink:nth-of-type(odd) {
+  padding-right: 1rem;
+}
+.tileLink:nth-of-type(even) {
+  padding-left: 1rem;
+}
+
 .articleTitle {
   margin-bottom: 0;
 }
@@ -27,5 +35,4 @@
   font-size: 1.6rem;
   overflow: hidden;
   margin-top: 2rem;
-  padding-right: 2rem;
 }

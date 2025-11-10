@@ -1,6 +1,14 @@
 .articleHeader {
   font-weight: 800;
+  margin-bottom: 0;
 }
 .contentContainer {
   padding-bottom: 10rem;
+}
+.author {
+  font-weight: 300;
+  font-size: 1.6rem;
+  color: rgba(140, 140, 140);
+  margin-top: 0;
+  margin-bottom: 3.2rem;
 }

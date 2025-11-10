@@ -31,3 +31,8 @@ body {
 body {
   font-size: 2.4rem;
 }
+
+::selection {
+  color: black;
+  background-color: yellow;
+}

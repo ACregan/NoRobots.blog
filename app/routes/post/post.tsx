@@ -32,23 +32,36 @@ export async function loader({ params }: Route.LoaderArgs) {
       (article: Article) => article.cid === articleId
     );
     // console.log("ARTICLES LIST", articlesList);
-    console.log("requestedArticle from LIST", requestedArticle);
+    // console.log("requestedArticle from LIST", requestedArticle);
+    const extractedAuthorDataStartIndex =
+      requestedArticle[0].value.content.indexOf("<!--_AUTHOR::") + 13;
+    // console.log("START INDEX = ", extractedAuthorDataStartIndex);
+    const extractedAuthorDataEndIndex =
+      requestedArticle[0].value.content.indexOf("-->\n");
+    // console.log("END INDEX = ", extractedAuthorDataEndIndex);
+    const extractedAuthorData = requestedArticle[0].value.content.substring(
+      extractedAuthorDataStartIndex,
+      extractedAuthorDataEndIndex
+    );
+    // console.log("VOILA!", extractedAuthorData);
     return {
       article: requestedArticle[0],
       params: params,
+      author: extractedAuthorData || "Hugh Mann",
     };
   } else {
     return {
       article: [],
       params: {},
+      author: "",
     };
   }
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {
-  const { article, params } = loaderData;
+  const { article, params, author } = loaderData;
   const { title, content } = article.value;
-  console.log("loaderData", loaderData);
+  // console.log("loaderData", loaderData);
   // // const richTextContent = new RichText({ text: result.content });
   const markdownConverted = marked.parse(
     content
@@ -57,10 +70,11 @@ export default function Post({ loaderData }: Route.ComponentProps) {
   ) as string;
 
   const markdownConvertedAndParsed = htmlParser(markdownConverted);
-  console.log("markdownConvertedAndParsed ", markdownConvertedAndParsed);
+  // console.log("markdownConvertedAndParsed ", markdownConvertedAndParsed);
   return (
     <div>
       <h1 className={styles.articleHeader}>{title}</h1>
+      <p className={styles.author}>By {author}</p>
       <div className={styles.contentContainer}>
         {markdownConvertedAndParsed}
       </div>

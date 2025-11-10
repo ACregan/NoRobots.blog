@@ -1,10 +1,7 @@
-// import { marked } from "marked";
-// import htmlParser from "html-react-parser";
 import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
 import type { Article } from "~/types/types";
 //https://www.npmjs.com/package/@atproto/api
-// import { RichText } from "@atproto/api";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,7 +14,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ params }: Route.LoaderArgs) {
+const fetchArticleData = async () => {
   //https://docs.bsky.app/docs/api/com-atproto-repo-list-records
   const url =
     "https://rhizopogon.us-west.host.bsky.network/xrpc/com.atproto.repo.listRecords?repo=norobots.blog&collection=com.whtwnd.blog.entry";
@@ -25,53 +22,71 @@ export async function loader({ params }: Route.LoaderArgs) {
   //"https://bsky.social/xrpc/com.atproto.repo.listRecords?repo=anthonycregan.dev&collection=com.whtwnd.blog.entry"
   const res = await fetch(url);
   const articles = await res.json();
-  console.log("ARTICLES", articles);
-  console.log("ARTICLES[0]", articles.records);
   if (articles.records && articles.records.length > 0) {
     const articlesList = articles.records;
-    console.log("ARTICLES LIST", articlesList);
+    let newArticlesList: Article[] = [];
+    console.log(articlesList);
+    // Find Author Data where its provided
+    articlesList.forEach((article: Article) => {
+      // article.value;
+      const authorTagCommentStartString = "<!--_AUTHOR::";
+      const authorTagCommentEndString = "-->";
+      const extractedAuthorDataStartIndex = article.value.content.indexOf(
+        authorTagCommentStartString
+      );
+      // console.log("START INDEX = ", extractedAuthorDataStartIndex);
+      const extractedAuthorDataEndIndex = article.value.content.indexOf(
+        authorTagCommentEndString
+      );
+      // console.log("END INDEX = ", extractedAuthorDataEndIndex);
+      const extractedAuthorData =
+        extractedAuthorDataStartIndex > 0 && extractedAuthorDataEndIndex > 0
+          ? article.value.content.substring(
+              extractedAuthorDataStartIndex +
+                authorTagCommentStartString.length,
+              extractedAuthorDataEndIndex
+            )
+          : "Hugh Mann";
+      console.log("extractedAuthorData", extractedAuthorData);
+
+      newArticlesList.push({
+        ...article,
+        authorName: extractedAuthorData,
+      });
+    });
     return {
-      articles: articlesList,
+      articles: newArticlesList,
     };
   } else {
     return {
       articles: [],
     };
   }
+};
+
+export async function loader({ params }: Route.LoaderArgs) {
+  const articleData = fetchArticleData();
+  return articleData;
 }
-
-// type ArticleTileProps = {
-//   cid: string;
-//   title: string;
-//   content: string;
-//   createdAt: string;
-// };
-
-// const ArticleTile = ({ cid, title, content, createdAt }: ArticleTileProps) => {
-//   return (
-//     <a href={`/post/${cid}`}>
-//       <div>
-//         <h2>{title}</h2>
-//         <div>{content}</div>
-//       </div>
-//     </a>
-//   );
-// };
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { articles } = loaderData;
   return (
     <div>
       {articles.map((article: Article) => {
-        return (
-          <ArticleTile
-            key={article.cid}
-            cid={article.cid}
-            title={article.value.title}
-            content={article.value.content}
-            createdAt={article.value.createdAt}
-          />
-        );
+        console.log("article", article);
+        if (article.value.visibility === "public" || import.meta.env.DEV) {
+          return (
+            <ArticleTile
+              key={article.cid}
+              cid={article.cid}
+              title={article.value.title}
+              content={article.value.content}
+              createdAt={article.value.createdAt}
+              author={article.authorName}
+            />
+          );
+        }
       })}
     </div>
   );

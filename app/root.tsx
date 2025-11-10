@@ -11,7 +11,10 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import "./assets/fonts/inter/inter.css";
 import "./root.css";
-import { PerpetualSummerSVG } from "./components/SvgImage/SvgImage";
+import {
+  NoRobotsLogo,
+  PerpetualSummerSVG,
+} from "./components/SvgImage/SvgImage";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -39,6 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <header>
           <div className="content-container">
             <a href="/">
+              <NoRobotsLogo />
               <h1>NoRobots.blog</h1>
             </a>
           </div>
@@ -48,7 +52,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </main>
         <footer>
           <div className="footer-container">
-            <div className="logo">
+            <div className="footer-col1">
+              <h1>NoRobots.blog</h1>
+              <p>
+                100% Human-produced content. <br />
+                No Language Models were used in the production of this weblog.
+              </p>
+            </div>
+            <div></div>
+            <div className="footer-col3">
               <PerpetualSummerSVG fill="white" />
             </div>
           </div>

@@ -5,6 +5,7 @@ type ArticleTileProps = {
   title: string;
   content: string;
   createdAt: Date;
+  author?: string;
 };
 type DateTimeFormatOptions = {
   year: string;
@@ -16,7 +17,13 @@ type DateTimeFormatOptions = {
   timeZoneName: string;
 };
 
-const ArticleTile = ({ cid, title, content, createdAt }: ArticleTileProps) => {
+const ArticleTile = ({
+  cid,
+  title,
+  content,
+  createdAt,
+  author,
+}: ArticleTileProps) => {
   const options = {
     year: "numeric",
     month: "long",
@@ -25,9 +32,8 @@ const ArticleTile = ({ cid, title, content, createdAt }: ArticleTileProps) => {
     // minute: "2-digit",
     // second: "2-digit",
     // timeZoneName: "short",
-  };
+  } as Intl.DateTimeFormatOptions;
   const dateObject = new Date(createdAt);
-  //@ts-ignore
   const customFormattedDate = new Intl.DateTimeFormat("en-GB", options).format(
     dateObject
   );
@@ -36,9 +42,9 @@ const ArticleTile = ({ cid, title, content, createdAt }: ArticleTileProps) => {
   const truncatedContent = content.substring(0, 240);
   return (
     <a href={`/post/${cid}`} className={style.tileLink}>
-      <div>
+      <div className={style.tile}>
         <h2 className={style.articleTitle}>{title}</h2>
-        <p className={style.authorName}>By Hugh Mann</p>
+        <p className={style.authorName}>By {author}</p>
         <p className={style.createdDate}>{customFormattedDate}</p>
         <div
           className={style.contentPreviewContainer}

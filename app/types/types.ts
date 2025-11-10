@@ -10,6 +10,7 @@ type Article = {
   cid: string;
   uri: string;
   value: ArticleValue;
+  authorName?: string;
 };
 
 export type { Article };
