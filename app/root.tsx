@@ -12,6 +12,8 @@ import "./app.css";
 import "./assets/fonts/inter/inter.css";
 import "./root.css";
 import {
+  AtProtoLogo,
+  BlueSky,
   NoRobotsLogo,
   PerpetualSummerSVG,
 } from "./components/SvgImage/SvgImage";
@@ -85,7 +87,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 No Language Models were used in the production of this weblog.
               </p>
             </div>
-            <div className="footer-col2"></div>
+            <div className="footer-col2">
+              <p>Built using</p>
+              <a href="https://atproto.com/">
+                <AtProtoLogo />
+              </a>
+              <p>
+                Follow us on{" "}
+                <a href="https://bsky.app/profile/norobots.blog">BlueSky</a>
+              </p>
+              <a
+                className="bskyicon"
+                href="https://bsky.app/profile/norobots.blog"
+              >
+                <BlueSky />
+              </a>
+            </div>
             <div className="footer-col3">
               <PerpetualSummerSVG fill="white" />
             </div>

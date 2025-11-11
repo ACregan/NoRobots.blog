@@ -114,15 +114,44 @@ body > footer > div.footer-container > div.footer-col1 > p {
   margin-right: 2rem;
 }
 
+body > footer > div.footer-container > div.footer-col2 {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+body > footer > div.footer-container > div.footer-col2 > p {
+  font-size: 1.4rem;
+  margin: 0;
+}
+body > footer > div.footer-container > div.footer-col2 > p > a {
+  color: white;
+}
+body > footer > div.footer-container > div.footer-col2 > p > a:hover {
+  color: yellow;
+}
+body
+  > footer
+  > div.footer-container
+  > div.footer-col2
+  > a.bskyicon:hover
+  > svg
+  > path {
+  fill: yellow;
+}
+body > footer > div.footer-container > div.footer-col2 svg {
+  height: 2rem;
+}
+
 body > footer > div.footer-container > div.footer-col3 {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   height: var(--footerElementHeight);
 }
 body > footer > div.footer-container > div.footer-col3 > svg {
   /* height: 8rem; */
-  width: 100%;
+  width: 90%;
 }
 
 @media screen and (max-width: 799px) {
