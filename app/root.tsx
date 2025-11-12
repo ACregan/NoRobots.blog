@@ -17,6 +17,7 @@ import {
   NoRobotsLogo,
   PerpetualSummerSVG,
 } from "./components/SvgImage/SvgImage";
+import { GoogleAnalyticsHead } from "./hooks/GoogleAnalytics";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -56,12 +57,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <GoogleAnalyticsHead />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body>
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-W3KZZHR8"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          ></iframe>
+        </noscript>
         <header>
           <div className="content-container">
             <a href="/">
