@@ -1,6 +1,8 @@
 :root {
   --headerElementHeight: 8rem;
   --footerElementHeight: 16rem;
+
+  --yellow: #fff300;
 }
 
 body {
@@ -9,7 +11,7 @@ body {
 }
 body > header {
   overflow: hidden;
-  background: yellow;
+  background: var(--yellow);
   height: var(--headerElementHeight);
   position: sticky;
   top: 0;
@@ -128,7 +130,7 @@ body > footer > div.footer-container > div.footer-col2 > p > a {
   color: white;
 }
 body > footer > div.footer-container > div.footer-col2 > p > a:hover {
-  color: yellow;
+  color: var(--yellow);
 }
 body
   > footer
@@ -137,7 +139,7 @@ body
   > a.bskyicon:hover
   > svg
   > path {
-  fill: yellow;
+  fill: var(--yellow);
 }
 body > footer > div.footer-container > div.footer-col2 svg {
   height: 2rem;

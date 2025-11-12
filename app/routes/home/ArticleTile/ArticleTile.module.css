@@ -53,10 +53,10 @@
   cursor: pointer;
 }
 .tileLink:hover .moreButton > span {
-  color: yellow;
+  color: var(--yellow);
 }
 .tileLink:hover .moreButton > svg {
-  fill: yellow;
+  fill: var(--yellow);
 }
 .moreButton > span {
   margin-right: 1rem;
