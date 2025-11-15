@@ -75,7 +75,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
     <div>
       <h1 className={styles.articleHeader}>{title}</h1>
       <p className={styles.author}>By {author}</p>
-      <div className={styles.contentContainer}>
+      <div className={styles.postContentContainer}>
         {markdownConvertedAndParsed}
       </div>
     </div>

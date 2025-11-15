@@ -2,7 +2,7 @@
   font-weight: 800;
   margin-bottom: 0;
 }
-.contentContainer {
+.postContentContainer {
   padding-bottom: 10rem;
 }
 .author {
@@ -11,4 +11,10 @@
   color: rgba(140, 140, 140);
   margin-top: 0;
   margin-bottom: 3.2rem;
+}
+
+@media screen and (max-width: 799px) {
+  .postContentContainer p {
+    font-size: 1.8rem;
+  }
 }
