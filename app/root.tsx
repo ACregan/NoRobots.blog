@@ -1,6 +1,7 @@
 import {
   isRouteErrorResponse,
   Links,
+  Link,
   Meta,
   Outlet,
   Scripts,
@@ -17,7 +18,10 @@ import {
   NoRobotsLogo,
   PerpetualSummerSVG,
 } from "./components/SvgImage/SvgImage";
-import { GoogleAnalyticsHead } from "./hooks/GoogleAnalytics";
+import {
+  GoogleAnalyticsHead,
+  trackClientAnalyticsEvent,
+} from "./hooks/GoogleAnalytics";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -66,7 +70,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-W3KZZHR8"
+            // src="https://www.googletagmanager.com/ns.html?id=GTM-W3KZZHR8"
+            src="https://www.googletagmanager.com/ns.html?id=G-F1E36ME2FJ"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
@@ -74,10 +79,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </noscript>
         <header>
           <div className="content-container">
-            <a href="/">
+            <Link
+              to="/"
+              onClick={() =>
+                trackClientAnalyticsEvent("header_homepage_link_click")
+              }
+            >
               <NoRobotsLogo />
               <h1>NoRobots.blog</h1>
-            </a>
+            </Link>
             <ul>
               <li>Tech.</li>
               <li>Creativity.</li>
@@ -99,19 +109,40 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </div>
             <div className="footer-col2">
               <p>Built using</p>
-              <a href="https://atproto.com/">
+              <Link
+                to="https://atproto.com/"
+                onClick={() =>
+                  trackClientAnalyticsEvent(
+                    "footer_atproto_external_link_click"
+                  )
+                }
+              >
                 <AtProtoLogo />
-              </a>
+              </Link>
               <p>
                 Follow us on{" "}
-                <a href="https://bsky.app/profile/norobots.blog">BlueSky</a>
+                <Link
+                  to="https://bsky.app/profile/norobots.blog"
+                  onClick={() =>
+                    trackClientAnalyticsEvent(
+                      "footer_bluesky_external_link_click"
+                    )
+                  }
+                >
+                  BlueSky
+                </Link>
               </p>
-              <a
+              <Link
                 className="bskyicon"
-                href="https://bsky.app/profile/norobots.blog"
+                to="https://bsky.app/profile/norobots.blog"
+                onClick={() =>
+                  trackClientAnalyticsEvent(
+                    "footer_bluesky_external_link_click"
+                  )
+                }
               >
                 <BlueSky />
-              </a>
+              </Link>
             </div>
             <div className="footer-col3">
               <PerpetualSummerSVG fill="white" />

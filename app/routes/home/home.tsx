@@ -25,7 +25,7 @@ const fetchArticleData = async () => {
   if (articles.records && articles.records.length > 0) {
     const articlesList = articles.records;
     let newArticlesList: Article[] = [];
-    console.log(articlesList);
+    // console.log(articlesList);
     // Find Author Data where its provided
     articlesList.forEach((article: Article) => {
       // article.value;
@@ -47,7 +47,7 @@ const fetchArticleData = async () => {
               extractedAuthorDataEndIndex
             )
           : "Hugh Mann";
-      console.log("extractedAuthorData", extractedAuthorData);
+      // console.log("extractedAuthorData", extractedAuthorData);
 
       newArticlesList.push({
         ...article,
@@ -74,7 +74,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <div>
       {articles.map((article: Article) => {
-        console.log("article", article);
         if (article.value.visibility === "public" || import.meta.env.DEV) {
           return (
             <ArticleTile

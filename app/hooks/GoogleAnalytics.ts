@@ -1,6 +1,7 @@
 //@ts-nocheck
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
+import type { SnakeCase } from "string-ts";
 
 const useGoogleAnalytics = (gaMeasurementId: string | undefined) => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -38,9 +39,10 @@ const useGoogleAnalytics = (gaMeasurementId: string | undefined) => {
   return isInitialized;
 };
 
-export const GoogleAnalyticsHead = () => {
+const GoogleAnalyticsHead = () => {
   const location = useLocation();
-  const gaMeasurementId = "GTM-W3KZZHR8";
+  // const gaMeasurementId = "GTM-W3KZZHR8";
+  const gaMeasurementId = "G-F1E36ME2FJ";
 
   const isGaInitialized = useGoogleAnalytics(gaMeasurementId);
 
@@ -54,5 +56,16 @@ export const GoogleAnalyticsHead = () => {
   }, [isGaInitialized, location, gaMeasurementId]);
   return null;
 };
+
+const trackClientAnalyticsEvent = <T extends string>(
+  eventName: T & SnakeCase<T>, // GA only supports snake_case event names. Let's enforce it at type-level to make life easier
+  properties?: Record<string, unknown>
+) => {
+  console.log("eventName", eventName);
+  console.log("properties", properties);
+  return window.gtag && window.gtag("event", eventName, properties);
+};
+
+export { GoogleAnalyticsHead, trackClientAnalyticsEvent };
 
 export default useGoogleAnalytics;
