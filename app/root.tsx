@@ -71,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <noscript>
           <iframe
             // src="https://www.googletagmanager.com/ns.html?id=GTM-W3KZZHR8"
-            src="https://www.googletagmanager.com/ns.html?id=G-F1E36ME2FJ"
+            src="https://www.googletagmanager.com/ns.html?id=G-Z6N3C35PLR"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
