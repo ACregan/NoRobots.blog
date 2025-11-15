@@ -70,7 +70,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <noscript>
           <iframe
-            // src="https://www.googletagmanager.com/ns.html?id=GTM-W3KZZHR8"
             src="https://www.googletagmanager.com/ns.html?id=G-Z6N3C35PLR"
             height="0"
             width="0"

@@ -41,7 +41,6 @@ const useGoogleAnalytics = (gaMeasurementId: string | undefined) => {
 
 const GoogleAnalyticsHead = () => {
   const location = useLocation();
-  // const gaMeasurementId = "GTM-W3KZZHR8";
   const gaMeasurementId = "G-Z6N3C35PLR";
 
   const isGaInitialized = useGoogleAnalytics(gaMeasurementId);
