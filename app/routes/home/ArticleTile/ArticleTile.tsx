@@ -1,5 +1,7 @@
 import { RightArrow } from "~/components/SvgImage/SvgImage";
 import style from "./ArticleTile.module.css";
+import { Link } from "react-router";
+import { trackClientAnalyticsEvent } from "~/hooks/GoogleAnalytics";
 
 type ArticleTileProps = {
   cid: string;
@@ -33,7 +35,13 @@ const ArticleTile = ({
   // Trim content to add ellipsis
   const truncatedContent = content.substring(0, 240);
   return (
-    <a href={`/post/${cid}`} className={style.tileLink}>
+    <Link
+      to={`/post/${cid}`}
+      className={style.tileLink}
+      onClick={() =>
+        trackClientAnalyticsEvent(`post_link_click`, { page: cid })
+      }
+    >
       <div className={style.tile}>
         <h2 className={style.articleTitle}>{title}</h2>
         <p className={style.authorName}>By {author}</p>
@@ -45,7 +53,7 @@ const ArticleTile = ({
           <span>READ MORE</span> <RightArrow fill="white" />
         </button>
       </div>
-    </a>
+    </Link>
   );
 };
 
