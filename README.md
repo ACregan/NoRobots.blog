@@ -1,4 +1,10 @@
-NOTES:
+# NoRobots.blog
+
+ATProto driven blogging site started as a POC but I quite like it so I might stick with it, use it as a place to host creative writing and mundane personal musings.
+
+---
+
+## NOTES:
 
 This will likely come in handy:
 https://mutualaid.info/posts/a-rough-sketch-of-at-protocol-and-pds-self-hosting/
@@ -8,6 +14,16 @@ curl -s 'https://bsky.social/xrpc/com.atproto.repo.listRecords?repo=anthonycrega
 
 ---
 
+16/11/2025
+
+After a bit of wrangling we used this to add Google Analytics
+https://dev.to/seasonedcc/google-analytics-ga4-implementation-with-react-remix-example-59j
+
+NOTE: In order to get it to start receiving events I needed to turn off both 'Privacy Badger' widget in browser and disable 'PiHole' for half an hour. Obviously other users should not have this problem but its worth noting in case we implement this elsewhere. If we have trouble sending or logging events in the GA console, this will be why.
+
+---
+
+<!--
 # Welcome to React Router!
 
 A modern, production-ready template for building full-stack React applications using React Router.
@@ -95,3 +111,5 @@ This template comes with [Tailwind CSS](https://tailwindcss.com/) already config
 ---
 
 Built with ❤️ using React Router.
+
+ -->
