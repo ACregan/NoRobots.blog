@@ -1,6 +1,7 @@
 import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
 import type { Article } from "~/types/types";
+import styles from "./home.module.css";
 //https://www.npmjs.com/package/@atproto/api
 
 export function meta({}: Route.MetaArgs) {
@@ -14,79 +15,133 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const fetchArticleData = async () => {
-  //https://docs.bsky.app/docs/api/com-atproto-repo-list-records
-  const url =
-    "https://rhizopogon.us-west.host.bsky.network/xrpc/com.atproto.repo.listRecords?repo=norobots.blog&collection=com.whtwnd.blog.entry";
-  //"https://rhizopogon.us-west.host.bsky.network/xrpc/com.atproto.repo.listRecords?repo=did%3Aplc%3Ac3zne4g2kcfjgdzbeentnj57&collection=com.whtwnd.blog.entry";
-  //"https://bsky.social/xrpc/com.atproto.repo.listRecords?repo=anthonycregan.dev&collection=com.whtwnd.blog.entry"
-  const res = await fetch(url);
-  const articles = await res.json();
-  if (articles.records && articles.records.length > 0) {
-    const articlesList = articles.records;
-    let newArticlesList: Article[] = [];
-    // console.log(articlesList);
-    // Find Author Data where its provided
-    articlesList.forEach((article: Article) => {
-      // article.value;
-      const authorTagCommentStartString = "<!--_AUTHOR::";
-      const authorTagCommentEndString = "-->";
-      const extractedAuthorDataStartIndex = article.value.content.indexOf(
-        authorTagCommentStartString
-      );
-      // console.log("START INDEX = ", extractedAuthorDataStartIndex);
-      const extractedAuthorDataEndIndex = article.value.content.indexOf(
-        authorTagCommentEndString
-      );
-      // console.log("END INDEX = ", extractedAuthorDataEndIndex);
-      const extractedAuthorData =
-        extractedAuthorDataStartIndex > 0 && extractedAuthorDataEndIndex > 0
-          ? article.value.content.substring(
-              extractedAuthorDataStartIndex +
-                authorTagCommentStartString.length,
-              extractedAuthorDataEndIndex
-            )
-          : "Hugh Mann";
-      // console.log("extractedAuthorData", extractedAuthorData);
+// NEW
+interface ArticleRef {
+  uri: string;
+  title: string;
+  url?: string;
+  splashImageUrl: string | null;
+  synopsis?: string | null;
+  createdAt: string;
+  updatedAt?: string;
+}
+interface SiteGroup {
+  slug: string;
+  title: string;
+  articles: ArticleRef[];
+}
+interface Site {
+  title: string;
+  url: string;
+  urlPrefix: string;
+  description?: string;
+  splashImageUrl?: string;
+  logoImageUrl?: string;
+  groups: SiteGroup[];
+  articles: ArticleRef[];
+}
+interface SiteWithAuthor extends Site {
+  author: string;
+}
 
-      newArticlesList.push({
-        ...article,
-        authorName: extractedAuthorData,
-      });
-    });
-    return {
-      articles: newArticlesList,
-    };
-  } else {
-    return {
-      articles: [],
-    };
+export const PUBLIC_API = "https://public.api.bsky.app";
+
+export async function resolveIdentifier(handleOrDid: string): Promise<string> {
+  if (handleOrDid.startsWith("did:")) return handleOrDid;
+  const res = await fetch(
+    `${PUBLIC_API}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(handleOrDid)}`,
+  );
+  if (!res.ok) {
+    throw new Error(
+      `Could not resolve handle "${handleOrDid}": ${res.statusText}`,
+    );
   }
-};
+  const data = await res.json();
+  return data.did as string;
+}
+
+async function resolvePDS(did: string): Promise<string> {
+  const res = await fetch(`https://plc.directory/${encodeURIComponent(did)}`);
+  if (!res.ok) throw new Error(`Could not resolve DID document for "${did}"`);
+  const doc = await res.json();
+  const service = doc.service?.find(
+    (s: { type: string; serviceEndpoint: string }) =>
+      s.type === "AtprotoPersonalDataServer",
+  );
+  if (!service) throw new Error(`No PDS found in DID document for "${did}"`);
+  return service.serviceEndpoint as string;
+}
+
+async function fetchSite(
+  author: string,
+  siteSlug: string,
+): Promise<SiteWithAuthor> {
+  const did = await resolveIdentifier(author);
+  const pds = await resolvePDS(did);
+  const res = await fetch(
+    `${pds}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(did)}&collection=app.scribe.site&rkey=${encodeURIComponent(siteSlug)}`,
+  );
+  if (!res.ok) {
+    if (res.status === 404) throw new Error(`Site "${siteSlug}" not found`);
+    throw new Error(`Failed to fetch site: ${res.statusText}`);
+  }
+  const { value } = await res.json();
+  return {
+    title: value.title ?? "",
+    url: value.url ?? "",
+    urlPrefix: value.urlPrefix ?? "",
+    description: value.description,
+    splashImageUrl: value.splashImageUrl,
+    logoImageUrl: value.logoImageUrl,
+    groups: value.groups ?? [],
+    articles: value.articles ?? [],
+    author: author,
+  };
+}
 
 export async function loader({ params }: Route.LoaderArgs) {
-  const articleData = fetchArticleData();
-  return articleData;
+  const siteData = await fetchSite("anthonycregan.dev", "norobots-blog");
+  console.log("siteData OUTPUT:", siteData);
+  return siteData;
+  // const articleData = fetchArticleData();
+  // return articleData;
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { articles } = loaderData;
+  console.log("loaderData", loaderData);
+  const {
+    title,
+    url,
+    urlPrefix,
+    description,
+    splashImageUrl,
+    logoImageUrl,
+    groups,
+    articles,
+    author,
+  } = loaderData;
   return (
-    <div>
-      {articles.map((article: Article) => {
-        if (article.value.visibility === "public" || import.meta.env.DEV) {
-          return (
-            <ArticleTile
-              key={article.cid}
-              cid={article.cid}
-              title={article.value.title}
-              content={article.value.content}
-              createdAt={article.value.createdAt}
-              author={article.authorName}
-            />
-          );
-        }
+    <>
+      {groups.map((group) => {
+        return (
+          <div className={styles.articleGroup}>
+            <h1 className={styles.groupHeading}>{group.title}</h1>
+            {group?.articles.map((article) => {
+              return (
+                <ArticleTile
+                  key={article.uri}
+                  url={article.url ?? ""}
+                  title={article.title}
+                  synopsis={article.synopsis ?? ""}
+                  createdAt={article.createdAt}
+                  updatedAt={article.updatedAt}
+                  author={author}
+                />
+              );
+            })}
+          </div>
+        );
       })}
-    </div>
+    </>
   );
 }

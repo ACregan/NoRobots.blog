@@ -4,18 +4,20 @@ import { Link } from "react-router";
 import { trackClientAnalyticsEvent } from "~/hooks/GoogleAnalytics";
 
 type ArticleTileProps = {
-  cid: string;
+  url: string;
   title: string;
-  content: string;
-  createdAt: Date;
+  synopsis: string;
+  createdAt: string;
+  updatedAt?: string;
   author?: string;
 };
 
 const ArticleTile = ({
-  cid,
+  url,
   title,
-  content,
+  synopsis,
   createdAt,
+  updatedAt,
   author,
 }: ArticleTileProps) => {
   const options = {
@@ -29,26 +31,24 @@ const ArticleTile = ({
   } as Intl.DateTimeFormatOptions;
   const dateObject = new Date(createdAt);
   const customFormattedDate = new Intl.DateTimeFormat("en-GB", options).format(
-    dateObject
+    dateObject,
   );
 
-  // Trim content to add ellipsis
-  const truncatedContent = content.substring(0, 240);
+  // Trim synopsis to add ellipsis
+  // const truncatedContent = content.substring(0, 240);
   return (
     <Link
-      to={`/post/${cid}`}
+      to={`/article/${url}`}
       className={style.tileLink}
       onClick={() =>
-        trackClientAnalyticsEvent(`post_link_click`, { page: cid })
+        trackClientAnalyticsEvent(`post_link_click`, { page: url })
       }
     >
       <div className={style.tile}>
         <h2 className={style.articleTitle}>{title}</h2>
         <p className={style.authorName}>By {author}</p>
         <p className={style.createdDate}>{customFormattedDate}</p>
-        <div
-          className={style.contentPreviewContainer}
-        >{`${truncatedContent} ...`}</div>
+        <div className={style.contentPreviewContainer}>{synopsis}</div>
         <button className={style.moreButton}>
           <span>READ MORE</span> <RightArrow fill="white" />
         </button>
