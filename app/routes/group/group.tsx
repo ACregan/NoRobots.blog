@@ -7,7 +7,11 @@ import { SITE_AUTHOR, SITE_SLUG } from "~/config";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
-    { title: loaderData ? `${loaderData.title} | NoRobots.blog` : "NoRobots.blog" },
+    {
+      title: loaderData
+        ? `${loaderData.title} | NoRobots.blog`
+        : "NoRobots.blog",
+    },
     { name: "description", content: loaderData?.title },
   ];
 }
@@ -25,17 +29,19 @@ export default function Group({ loaderData }: Route.ComponentProps) {
   return (
     <div className={styles.groupPage}>
       <GroupHeading>{title}</GroupHeading>
-      {articles.map((article) => (
-        <ArticleTile
-          key={article.uri}
-          url={article.url ?? ""}
-          title={article.title}
-          synopsis={article.synopsis ?? ""}
-          createdAt={article.createdAt}
-          updatedAt={article.updatedAt}
-          author={SITE_AUTHOR}
-        />
-      ))}
+      <div className={styles.articlesContainer}>
+        {articles.map((article) => (
+          <ArticleTile
+            key={article.uri}
+            url={article.url ?? ""}
+            title={article.title}
+            synopsis={article.synopsis ?? ""}
+            createdAt={article.createdAt}
+            updatedAt={article.updatedAt}
+            author={SITE_AUTHOR}
+          />
+        ))}
+      </div>
     </div>
   );
 }

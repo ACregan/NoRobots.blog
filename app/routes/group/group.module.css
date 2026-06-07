@@ -1,3 +1,7 @@
 .groupPage {
   margin: 0 0 5rem 0;
 }
+.articlesContainer {
+  display: flex;
+  gap: 2rem;
+}

@@ -29,17 +29,19 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           return (
             <div key={group.slug} className={styles.articleGroup}>
               <GroupHeading link={group.slug}>{group.title}</GroupHeading>
-              {group.articles.map((article) => (
-                <ArticleTile
-                  key={article.uri}
-                  url={article.url ?? ""}
-                  title={article.title}
-                  synopsis={article.synopsis ?? ""}
-                  createdAt={article.createdAt}
-                  updatedAt={article.updatedAt}
-                  author={SITE_AUTHOR}
-                />
-              ))}
+              <div className={styles.articlesContainer}>
+                {group.articles.map((article) => (
+                  <ArticleTile
+                    key={article.uri}
+                    url={article.url ?? ""}
+                    title={article.title}
+                    synopsis={article.synopsis ?? ""}
+                    createdAt={article.createdAt}
+                    updatedAt={article.updatedAt}
+                    author={SITE_AUTHOR}
+                  />
+                ))}
+              </div>
             </div>
           );
         }

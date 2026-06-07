@@ -1,7 +1,10 @@
 .articleGroup {
   --group-heading-margin: 5rem;
 }
-
+.articlesContainer {
+  display: flex;
+  gap: 2rem;
+}
 .articleGroup:first-of-type {
   --group-heading-margin: 1rem;
 }
