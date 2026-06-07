@@ -1,0 +1,11 @@
+.articleGroup {
+  --group-heading-margin: 5rem;
+}
+
+.articleGroup:first-of-type {
+  --group-heading-margin: 1rem;
+}
+
+.articleGroup:last-of-type {
+  margin: 0 0 5rem 0;
+}

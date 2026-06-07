@@ -5,3 +5,7 @@
 # React Router
 /.react-router/
 /build/
+
+# Claude Code — session-specific settings; CLAUDE.md and hooks can still be tracked
+.claude/settings*.json
+.claude/memory/

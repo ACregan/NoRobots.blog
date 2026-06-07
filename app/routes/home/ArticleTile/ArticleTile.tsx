@@ -1,55 +1,40 @@
 import { RightArrow } from "~/components/SvgImage/SvgImage";
-import style from "./ArticleTile.module.css";
+import styles from "./ArticleTile.module.css";
 import { Link } from "react-router";
-import { trackClientAnalyticsEvent } from "~/hooks/GoogleAnalytics";
+import { trackClientAnalyticsEvent, AnalyticsEvent } from "~/hooks/GoogleAnalytics";
+import { formatDate } from "~/utils";
 
 type ArticleTileProps = {
-  cid: string;
+  url: string;
   title: string;
-  content: string;
-  createdAt: Date;
+  synopsis: string;
+  createdAt: string;
+  updatedAt?: string;
   author?: string;
 };
 
 const ArticleTile = ({
-  cid,
+  url,
   title,
-  content,
+  synopsis,
   createdAt,
+  updatedAt,
   author,
 }: ArticleTileProps) => {
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    // hour: "2-digit",
-    // minute: "2-digit",
-    // second: "2-digit",
-    // timeZoneName: "short",
-  } as Intl.DateTimeFormatOptions;
-  const dateObject = new Date(createdAt);
-  const customFormattedDate = new Intl.DateTimeFormat("en-GB", options).format(
-    dateObject
-  );
-
-  // Trim content to add ellipsis
-  const truncatedContent = content.substring(0, 240);
   return (
     <Link
-      to={`/post/${cid}`}
-      className={style.tileLink}
+      to={`/article/${url}`}
+      className={styles.tileLink}
       onClick={() =>
-        trackClientAnalyticsEvent(`post_link_click`, { page: cid })
+        trackClientAnalyticsEvent(AnalyticsEvent.postLinkClick, { page: url })
       }
     >
-      <div className={style.tile}>
-        <h2 className={style.articleTitle}>{title}</h2>
-        <p className={style.authorName}>By {author}</p>
-        <p className={style.createdDate}>{customFormattedDate}</p>
-        <div
-          className={style.contentPreviewContainer}
-        >{`${truncatedContent} ...`}</div>
-        <button className={style.moreButton}>
+      <div className={styles.tile}>
+        <h2 className={styles.articleTitle}>{title}</h2>
+        <p className={styles.authorName}>By {author}</p>
+        <p className={styles.createdDate}>{formatDate(createdAt)}</p>
+        <div className={styles.contentPreviewContainer}>{synopsis}</div>
+        <button className={styles.moreButton}>
           <span>READ MORE</span> <RightArrow fill="white" />
         </button>
       </div>

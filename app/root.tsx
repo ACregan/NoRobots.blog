@@ -21,6 +21,7 @@ import {
 import {
   GoogleAnalyticsHead,
   trackClientAnalyticsEvent,
+  AnalyticsEvent,
 } from "./hooks/GoogleAnalytics";
 
 export const links: Route.LinksFunction = () => [
@@ -81,7 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Link
               to="/"
               onClick={() =>
-                trackClientAnalyticsEvent("header_homepage_link_click")
+                trackClientAnalyticsEvent(AnalyticsEvent.headerHomepageLinkClick)
               }
             >
               <NoRobotsLogo />
@@ -112,7 +113,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 to="https://atproto.com/"
                 onClick={() =>
                   trackClientAnalyticsEvent(
-                    "footer_atproto_external_link_click"
+                    AnalyticsEvent.footerAtprotoExternalLinkClick
                   )
                 }
               >
@@ -124,7 +125,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   to="https://bsky.app/profile/norobots.blog"
                   onClick={() =>
                     trackClientAnalyticsEvent(
-                      "footer_bluesky_external_link_click"
+                      AnalyticsEvent.footerBlueskyExternalLinkClick
                     )
                   }
                 >
@@ -136,7 +137,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 to="https://bsky.app/profile/norobots.blog"
                 onClick={() =>
                   trackClientAnalyticsEvent(
-                    "footer_bluesky_external_link_click"
+                    AnalyticsEvent.footerBlueskyExternalLinkClick
                   )
                 }
               >
