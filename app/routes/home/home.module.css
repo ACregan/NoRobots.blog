@@ -1,27 +1,11 @@
-.articleGroup:first-of-type .groupHeading {
-  margin: 1rem 0 0 0;
+.articleGroup {
+  --group-heading-margin: 5rem;
 }
+
+.articleGroup:first-of-type {
+  --group-heading-margin: 1rem;
+}
+
 .articleGroup:last-of-type {
   margin: 0 0 5rem 0;
-}
-
-.groupHeading {
-  position: relative;
-  -webkit-text-stroke: 0.8rem white; /* Thick outline */
-  paint-order: stroke fill; /* Puts the stroke behind the text fill */
-
-  margin: 5rem 0 0 0;
-  z-index: 100;
-}
-
-.groupHeading:after {
-  display: block;
-  content: "";
-  position: absolute;
-  bottom: 0.3rem;
-  left: 0;
-  right: 0;
-  height: 0.3rem;
-  background: black;
-  z-index: -1;
 }

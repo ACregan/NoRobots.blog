@@ -1,0 +1,44 @@
+.heading {
+  position: relative;
+  -webkit-text-stroke: 0.8rem white;
+  paint-order: stroke fill;
+  margin: var(--group-heading-margin, 1rem) 0 0 0;
+  z-index: 100;
+}
+
+.heading:after {
+  display: block;
+  content: "";
+  position: absolute;
+  bottom: 0.3rem;
+  left: 0;
+  right: 0;
+  height: 0.3rem;
+  background: black;
+  z-index: -1;
+}
+.link {
+  position: relative;
+  display: block;
+}
+.link:active,
+.link:link,
+.link:visited {
+  color: black;
+  text-decoration: none;
+}
+.arrowContainer {
+  position: absolute;
+  top: 0.5rem;
+  right: 0;
+  height: 4rem;
+  width: 4rem;
+
+  transform: translateX(-3rem);
+  transition: all 0.5s ease-in-out;
+  opacity: 0;
+}
+.link:hover > .arrowContainer {
+  transform: translateX(0rem);
+  opacity: 1;
+}

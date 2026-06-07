@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
+import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./home.module.css";
 import { getSite } from "~/atproto";
 import { SITE_AUTHOR, SITE_SLUG } from "~/config";
@@ -25,7 +26,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <>
       {groups.map((group) => (
         <div key={group.slug} className={styles.articleGroup}>
-          <h1 className={styles.groupHeading}>{group.title}</h1>
+          <GroupHeading link={group.slug}>{group.title}</GroupHeading>
           {group.articles.map((article) => (
             <ArticleTile
               key={article.uri}
