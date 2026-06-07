@@ -52,6 +52,13 @@ export const GoogleAnalyticsHead = () => {
   return null;
 };
 
+export const AnalyticsEvent = {
+  headerHomepageLinkClick: "header_homepage_link_click",
+  footerAtprotoExternalLinkClick: "footer_atproto_external_link_click",
+  footerBlueskyExternalLinkClick: "footer_bluesky_external_link_click",
+  postLinkClick: "post_link_click",
+} as const;
+
 export const trackClientAnalyticsEvent = <T extends string>(
   eventName: T & SnakeCase<T>,
   properties?: Record<string, unknown>,
