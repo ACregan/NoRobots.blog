@@ -1,5 +1,5 @@
 import { RightArrow } from "~/components/SvgImage/SvgImage";
-import style from "./ArticleTile.module.css";
+import styles from "./ArticleTile.module.css";
 import { Link } from "react-router";
 import { trackClientAnalyticsEvent } from "~/hooks/GoogleAnalytics";
 
@@ -39,17 +39,17 @@ const ArticleTile = ({
   return (
     <Link
       to={`/article/${url}`}
-      className={style.tileLink}
+      className={styles.tileLink}
       onClick={() =>
         trackClientAnalyticsEvent(`post_link_click`, { page: url })
       }
     >
-      <div className={style.tile}>
-        <h2 className={style.articleTitle}>{title}</h2>
-        <p className={style.authorName}>By {author}</p>
-        <p className={style.createdDate}>{customFormattedDate}</p>
-        <div className={style.contentPreviewContainer}>{synopsis}</div>
-        <button className={style.moreButton}>
+      <div className={styles.tile}>
+        <h2 className={styles.articleTitle}>{title}</h2>
+        <p className={styles.authorName}>By {author}</p>
+        <p className={styles.createdDate}>{customFormattedDate}</p>
+        <div className={styles.contentPreviewContainer}>{synopsis}</div>
+        <button className={styles.moreButton}>
           <span>READ MORE</span> <RightArrow fill="white" />
         </button>
       </div>
