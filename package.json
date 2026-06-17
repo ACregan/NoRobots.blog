@@ -23,6 +23,9 @@
     "string-ts": "^2.2.1",
     "zod": "^4.4.3"
   },
+  "overrides": {
+    "rollup": "4.52.0"
+  },
   "devDependencies": {
     "@react-router/dev": "^7.9.2",
     "@tailwindcss/vite": "^4.1.13",
