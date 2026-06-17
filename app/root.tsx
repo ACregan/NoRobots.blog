@@ -24,6 +24,8 @@ import {
   AnalyticsEvent,
 } from "./hooks/GoogleAnalytics";
 
+declare const __APP_VERSION__: string;
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -65,6 +67,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <GoogleAnalyticsHead />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="NoRobots.blog" />
+        <meta name="description" content="100% Human-produced content. No Language Models were used in the production of this weblog." />
+        <meta name="version" content={__APP_VERSION__} />
         <Meta />
         <Links />
       </head>
