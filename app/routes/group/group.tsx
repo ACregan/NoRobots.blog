@@ -3,6 +3,7 @@ import ArticleTile from "../home/ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./group.module.css";
 import { getSite } from "~/atproto";
+import type { ArticleRef } from "~/atproto";
 import { SITE_AUTHOR, SITE_SLUG } from "~/config";
 
 export function meta({ loaderData }: Route.MetaArgs) {
@@ -30,7 +31,7 @@ export default function Group({ loaderData }: Route.ComponentProps) {
     <div className={styles.groupPage}>
       <GroupHeading>{title}</GroupHeading>
       <div className={styles.articlesContainer}>
-        {articles.map((article) => (
+        {articles.map((article: ArticleRef) => (
           <ArticleTile
             key={article.uri}
             url={article.url ?? ""}
