@@ -47,12 +47,11 @@ unit:
 deploy:
   stage: deploy
   interruptible: false
-  tags:
-    - playwright
   environment:
     name: production
     url: https://norobots.blog
   before_script:
+    - command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )
     - eval $(ssh-agent -s)
     - printf '\n' >> "$SSH_DEPLOY_KEY"
     - chmod 400 "$SSH_DEPLOY_KEY" && ssh-add "$SSH_DEPLOY_KEY"
