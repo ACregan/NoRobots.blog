@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("~/atproto", () => ({ getSite: vi.fn() }));
+vi.mock("@scribe-atp/core", () => ({ fetchSite: vi.fn() }));
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_SLUG: "test-site" }));
 
 import { loader } from "./group";
-import { getSite } from "~/atproto";
-import type { Site } from "~/atproto";
+import { fetchSite } from "@scribe-atp/core";
+import type { Site } from "@scribe-atp/core";
 
 const mockSite: Site = {
   title: "Test Site",
-  url: "https://test.example.com",
-  urlPrefix: "article/",
+  url: "test.example.com",
+  urlPrefix: "",
   groups: [
     {
       slug: "technology",
@@ -33,13 +33,16 @@ const mockSite: Site = {
   ungroupedArticles: [],
 };
 
+const makeArgs = (groupSlug: string) =>
+  ({ request: new Request("https://example.com"), params: { groupSlug } }) as never;
+
 beforeEach(() => {
-  vi.mocked(getSite).mockResolvedValue(mockSite);
+  vi.mocked(fetchSite).mockResolvedValue(mockSite);
 });
 
 describe("group loader", () => {
   it("returns the group matching the slug param", async () => {
-    const result = await loader({ params: { groupSlug: "technology" } } as never);
+    const result = await loader(makeArgs("technology"));
 
     expect(result.slug).toBe("technology");
     expect(result.title).toBe("Technology");
@@ -49,7 +52,7 @@ describe("group loader", () => {
   it("throws a 404 Response when the slug does not match any group", async () => {
     let thrown: unknown;
     try {
-      await loader({ params: { groupSlug: "nonexistent" } } as never);
+      await loader(makeArgs("nonexistent"));
     } catch (e) {
       thrown = e;
     }

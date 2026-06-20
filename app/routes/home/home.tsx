@@ -2,8 +2,8 @@ import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./home.module.css";
-import { getSite } from "~/atproto";
-import type { ArticleRef, SiteGroup } from "~/atproto";
+import { createSiteLoader } from "@scribe-atp/react-router-framework";
+import type { ArticleRef, SiteGroup } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_SLUG } from "~/config";
 
 export function meta({}: Route.MetaArgs) {
@@ -17,9 +17,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader() {
-  return getSite(SITE_AUTHOR, SITE_SLUG);
-}
+export const loader = createSiteLoader(SITE_AUTHOR, SITE_SLUG);
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { groups } = loaderData;

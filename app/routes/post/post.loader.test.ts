@@ -1,36 +1,42 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("~/atproto", () => ({ getArticle: vi.fn() }));
+vi.mock("@scribe-atp/core", () => ({ fetchArticle: vi.fn() }));
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author" }));
 
 import { loader } from "./post";
-import { getArticle } from "~/atproto";
-import type { Article } from "~/atproto";
+import { fetchArticle } from "@scribe-atp/core";
+import type { Article } from "@scribe-atp/core";
 
 const mockArticle: Article = {
   title: "Hello World",
-  content: "## Hello\n\nSome content here.",
+  content: "<h2>Hello</h2><p>Some content here.</p>",
   url: "hello-world",
   synopsis: "A brief intro.",
   createdAt: "2024-03-15T12:00:00Z",
+  updatedAt: "2024-03-15T12:00:00Z",
 };
 
+const makeArgs = (articleId?: string) =>
+  ({ request: new Request("https://example.com"), params: { articleId } }) as never;
+
 beforeEach(() => {
-  vi.mocked(getArticle).mockResolvedValue(mockArticle);
+  vi.mocked(fetchArticle).mockResolvedValue(mockArticle);
 });
 
 describe("post loader", () => {
   it("fetches the article by slug and returns it", async () => {
-    const result = await loader({ params: { articleId: "hello-world" } } as never);
+    const result = await loader(makeArgs("hello-world"));
 
     expect(result.title).toBe("Hello World");
-    expect(result.content).toBe("## Hello\n\nSome content here.");
-    expect(getArticle).toHaveBeenCalledWith("test-author", "hello-world");
+    expect(result.content).toBe("<h2>Hello</h2><p>Some content here.</p>");
+    expect(fetchArticle).toHaveBeenCalledWith(
+      "test-author",
+      "hello-world",
+      expect.any(AbortSignal),
+    );
   });
 
   it("throws when articleId param is missing", async () => {
-    await expect(loader({ params: {} } as never)).rejects.toThrow(
-      "No article ID provided",
-    );
+    await expect(loader(makeArgs())).rejects.toThrow("No article ID provided");
   });
 });

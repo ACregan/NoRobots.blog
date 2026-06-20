@@ -1,8 +1,7 @@
-import { marked } from "marked";
 import htmlParser from "html-react-parser";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
-import { getArticle } from "~/atproto";
+import { fetchArticle } from "@scribe-atp/core";
 import { SITE_AUTHOR } from "~/config";
 
 const SITE_DESCRIPTION =
@@ -15,26 +14,20 @@ export function meta({ loaderData }: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   const { articleId } = params;
   if (!articleId) throw new Error("No article ID provided");
-  return getArticle(SITE_AUTHOR, articleId);
+  return fetchArticle(SITE_AUTHOR, articleId, request.signal);
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {
   const { title, content } = loaderData;
-  const markdownConverted = marked.parse(
-    content
-      .replace(/^[​‌‍‎‏﻿]/, "")
-      .replaceAll(`\\n`, ""),
-  ) as string;
-  const markdownConvertedAndParsed = htmlParser(markdownConverted);
   return (
     <div>
       <h1 className={styles.articleHeader}>{title}</h1>
       <p className={styles.author}>By {SITE_AUTHOR}</p>
       <div className={styles.postContentContainer}>
-        {markdownConvertedAndParsed}
+        {htmlParser(content)}
       </div>
     </div>
   );
