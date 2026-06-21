@@ -5,6 +5,7 @@ import { trackClientAnalyticsEvent, AnalyticsEvent } from "~/hooks/GoogleAnalyti
 import { formatDate } from "~/utils";
 
 type ArticleTileProps = {
+  groupSlug: string;
   url: string;
   title: string;
   synopsis: string;
@@ -14,6 +15,7 @@ type ArticleTileProps = {
 };
 
 const ArticleTile = ({
+  groupSlug,
   url,
   title,
   synopsis,
@@ -23,7 +25,7 @@ const ArticleTile = ({
 }: ArticleTileProps) => {
   return (
     <Link
-      to={`/article/${url}`}
+      to={`/${groupSlug}/${url}`}
       className={styles.tileLink}
       onClick={() =>
         trackClientAnalyticsEvent(AnalyticsEvent.postLinkClick, { page: url })
