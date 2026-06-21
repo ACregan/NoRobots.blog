@@ -32,6 +32,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 {group.articles.map((article: ArticleRef) => (
                   <ArticleTile
                     key={article.uri}
+                    groupSlug={group.slug}
                     url={article.url ?? ""}
                     title={article.title}
                     synopsis={article.synopsis ?? ""}

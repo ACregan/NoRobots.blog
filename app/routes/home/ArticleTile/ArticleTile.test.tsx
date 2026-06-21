@@ -15,6 +15,7 @@ import ArticleTile from "./ArticleTile";
 import { trackClientAnalyticsEvent } from "~/hooks/GoogleAnalytics";
 
 const defaultProps = {
+  groupSlug: "creative-writing",
   url: "my-article",
   title: "My Article Title",
   synopsis: "A brief synopsis of the article.",
@@ -52,7 +53,7 @@ describe("ArticleTile", () => {
 
   it("links to the correct article path", () => {
     renderTile();
-    expect(screen.getByRole("link")).toHaveAttribute("href", "/article/my-article");
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/creative-writing/my-article");
   });
 
   it("displays the formatted date via formatDate", () => {

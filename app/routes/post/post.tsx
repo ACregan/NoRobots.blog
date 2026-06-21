@@ -15,9 +15,9 @@ export function meta({ loaderData }: Route.MetaArgs) {
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
-  const { articleId } = params;
-  if (!articleId) throw new Error("No article ID provided");
-  return fetchArticle(SITE_AUTHOR, articleId, request.signal);
+  const { articleSlug } = params;
+  if (!articleSlug) throw new Error("No article slug provided");
+  return fetchArticle(SITE_AUTHOR, articleSlug, request.signal);
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {

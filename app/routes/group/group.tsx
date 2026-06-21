@@ -26,7 +26,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 }
 
 export default function Group({ loaderData }: Route.ComponentProps) {
-  const { title, articles } = loaderData;
+  const { slug, title, articles } = loaderData;
   return (
     <div className={styles.groupPage}>
       <GroupHeading>{title}</GroupHeading>
@@ -34,6 +34,7 @@ export default function Group({ loaderData }: Route.ComponentProps) {
         {articles.map((article: ArticleRef) => (
           <ArticleTile
             key={article.uri}
+            groupSlug={slug}
             url={article.url ?? ""}
             title={article.title}
             synopsis={article.synopsis ?? ""}

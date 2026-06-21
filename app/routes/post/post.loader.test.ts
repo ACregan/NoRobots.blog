@@ -16,8 +16,8 @@ const mockArticle: Article = {
   updatedAt: "2024-03-15T12:00:00Z",
 };
 
-const makeArgs = (articleId?: string) =>
-  ({ request: new Request("https://example.com"), params: { articleId } }) as never;
+const makeArgs = (articleSlug?: string) =>
+  ({ request: new Request("https://example.com"), params: { articleSlug } }) as never;
 
 beforeEach(() => {
   vi.mocked(fetchArticle).mockResolvedValue(mockArticle);
@@ -36,7 +36,7 @@ describe("post loader", () => {
     );
   });
 
-  it("throws when articleId param is missing", async () => {
-    await expect(loader(makeArgs())).rejects.toThrow("No article ID provided");
+  it("throws when articleSlug param is missing", async () => {
+    await expect(loader(makeArgs())).rejects.toThrow("No article slug provided");
   });
 });
