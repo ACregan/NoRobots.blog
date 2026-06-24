@@ -35,7 +35,7 @@ Resource routes (`feed.ts`, `sitemap.ts`) export only a `loader` — no default 
 
 ## Article links
 
-`ArticleTile` receives `groupSlug` and `url` (article slug) and links to `/${groupSlug}/${url}`. Both `home.tsx` (iterating groups) and `group/group.tsx` pass `groupSlug` explicitly — do not remove it.
+`ArticleTile` receives `groupSlug` and `slug` (article slug) and links to `/${groupSlug}/${slug}`. Both `home.tsx` (iterating groups) and `group/group.tsx` pass `groupSlug` explicitly — do not remove it.
 
 ## Sitemap
 
