@@ -10,9 +10,11 @@ import type { Article } from "@scribe-atp/core";
 const mockArticle: Article = {
   title: "Hello World",
   content: "<h2>Hello</h2><p>Some content here.</p>",
-  url: "hello-world",
-  synopsis: "A brief intro.",
+  path: "/hello-world",
+  site: "https://norobots.blog",
+  description: "A brief intro.",
   createdAt: "2024-03-15T12:00:00Z",
+  publishedAt: "2024-03-15T12:00:00Z",
   updatedAt: "2024-03-15T12:00:00Z",
 };
 
