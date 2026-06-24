@@ -35,9 +35,9 @@ export default function Group({ loaderData }: Route.ComponentProps) {
           <ArticleTile
             key={article.uri}
             groupSlug={slug}
-            url={article.url ?? ""}
+            slug={article.slug ?? ""}
             title={article.title}
-            synopsis={article.synopsis ?? ""}
+            description={article.description ?? ""}
             createdAt={article.createdAt}
             updatedAt={article.updatedAt}
             author={SITE_AUTHOR}

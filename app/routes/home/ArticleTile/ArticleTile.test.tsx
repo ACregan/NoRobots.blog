@@ -16,9 +16,9 @@ import { trackClientAnalyticsEvent } from "~/hooks/GoogleAnalytics";
 
 const defaultProps = {
   groupSlug: "creative-writing",
-  url: "my-article",
+  slug: "my-article",
   title: "My Article Title",
-  synopsis: "A brief synopsis of the article.",
+  description: "A brief synopsis of the article.",
   createdAt: "2024-03-15T12:00:00.000Z",
   author: "anthonycregan.dev",
 };

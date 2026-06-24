@@ -10,7 +10,7 @@ const SITE_DESCRIPTION =
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
     { title: loaderData ? `${loaderData.title} | NoRobots.blog` : "NoRobots.blog" },
-    { name: "description", content: loaderData?.synopsis ?? SITE_DESCRIPTION },
+    { name: "description", content: loaderData?.description ?? SITE_DESCRIPTION },
   ];
 }
 
