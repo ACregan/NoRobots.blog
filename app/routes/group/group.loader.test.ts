@@ -17,7 +17,7 @@ const mockSite: Site = {
       title: "Technology",
       articles: [
         {
-          uri: "at://did/app.scribe.article/post-1",
+          uri: "at://did/site.standard.document/post-1",
           title: "Tech Post",
           splashImageUrl: null,
           createdAt: "2024-01-01T00:00:00Z",
