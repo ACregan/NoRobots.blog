@@ -6,9 +6,9 @@ import { formatDate } from "~/utils";
 
 type ArticleTileProps = {
   groupSlug: string;
-  url: string;
+  slug: string;
   title: string;
-  synopsis: string;
+  description: string;
   createdAt: string;
   updatedAt?: string;
   author?: string;
@@ -16,26 +16,26 @@ type ArticleTileProps = {
 
 const ArticleTile = ({
   groupSlug,
-  url,
+  slug,
   title,
-  synopsis,
+  description,
   createdAt,
   updatedAt,
   author,
 }: ArticleTileProps) => {
   return (
     <Link
-      to={`/${groupSlug}/${url}`}
+      to={`/${groupSlug}/${slug}`}
       className={styles.tileLink}
       onClick={() =>
-        trackClientAnalyticsEvent(AnalyticsEvent.postLinkClick, { page: url })
+        trackClientAnalyticsEvent(AnalyticsEvent.postLinkClick, { page: slug })
       }
     >
       <div className={styles.tile}>
         <h2 className={styles.articleTitle}>{title}</h2>
         <p className={styles.authorName}>By {author}</p>
         <p className={styles.createdDate}>{formatDate(createdAt)}</p>
-        <div className={styles.contentPreviewContainer}>{synopsis}</div>
+        <div className={styles.contentPreviewContainer}>{description}</div>
         <button className={styles.moreButton}>
           <span>READ MORE</span> <RightArrow fill="white" />
         </button>
