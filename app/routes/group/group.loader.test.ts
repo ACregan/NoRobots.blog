@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@scribe-atp/core", () => ({ fetchSite: vi.fn() }));
-vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_SLUG: "test-site" }));
+vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./group";
 import { fetchSite } from "@scribe-atp/core";

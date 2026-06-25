@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@scribe-atp/core", () => ({ fetchArticleBySlug: vi.fn() }));
-vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_SLUG: "test-slug" }));
+vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./post";
 import { fetchArticleBySlug } from "@scribe-atp/core";
@@ -36,7 +36,7 @@ describe("post loader", () => {
     expect(result.documentUri).toBe(documentUri);
     expect(fetchArticleBySlug).toHaveBeenCalledWith(
       "test-author",
-      "test-slug",
+      "https://test.example.com",
       "hello-world",
       expect.any(AbortSignal),
     );

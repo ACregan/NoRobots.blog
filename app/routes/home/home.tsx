@@ -4,7 +4,7 @@ import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./home.module.css";
 import { createSiteLoader } from "@scribe-atp/react-router-framework";
 import type { ArticleRef, SiteGroup } from "@scribe-atp/core";
-import { SITE_AUTHOR, SITE_SLUG } from "~/config";
+import { SITE_AUTHOR, SITE_URL } from "~/config";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,7 +17,7 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export const loader = createSiteLoader(SITE_AUTHOR, SITE_SLUG);
+export const loader = createSiteLoader(SITE_AUTHOR, SITE_URL);
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { groups } = loaderData;
