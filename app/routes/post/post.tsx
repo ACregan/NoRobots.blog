@@ -1,8 +1,8 @@
 import htmlParser from "html-react-parser";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
-import { fetchArticle, resolveDocumentUri } from "@scribe-atp/core";
-import { SITE_AUTHOR } from "~/config";
+import { fetchArticleBySlug } from "@scribe-atp/core";
+import { SITE_AUTHOR, SITE_SLUG } from "~/config";
 
 const SITE_DESCRIPTION =
   "Creative writing and news from the front line of the machine resistance. 100% Human-produced content. No Language Models were used in the production of this weblog.";
@@ -20,10 +20,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
 export async function loader({ request, params }: Route.LoaderArgs) {
   const { articleSlug } = params;
   if (!articleSlug) throw new Error("Missing route param: articleSlug");
-  const [article, documentUri] = await Promise.all([
-    fetchArticle(SITE_AUTHOR, articleSlug, request.signal),
-    resolveDocumentUri(SITE_AUTHOR, articleSlug, request.signal),
-  ]);
+  const { article, uri: documentUri } = await fetchArticleBySlug(SITE_AUTHOR, SITE_SLUG, articleSlug, request.signal);
   return { ...article, documentUri };
 }
 
