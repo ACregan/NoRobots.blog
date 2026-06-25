@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", () => ({ fetchArticle: vi.fn() }));
-vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author" }));
+vi.mock("@scribe-atp/core", () => ({ fetchArticle: vi.fn(), resolveDocumentUri: vi.fn() }));
+vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_SLUG: "test-slug" }));
 
 import { loader } from "./post";
-import { fetchArticle } from "@scribe-atp/core";
+import { fetchArticle, resolveDocumentUri } from "@scribe-atp/core";
 import type { Article } from "@scribe-atp/core";
 
 const mockArticle: Article = {
@@ -23,6 +23,7 @@ const makeArgs = (articleSlug?: string) =>
 
 beforeEach(() => {
   vi.mocked(fetchArticle).mockResolvedValue(mockArticle);
+  vi.mocked(resolveDocumentUri).mockResolvedValue("at://did:plc:test/site.standard.document/hello-world");
 });
 
 describe("post loader", () => {
@@ -39,6 +40,6 @@ describe("post loader", () => {
   });
 
   it("throws when articleSlug param is missing", async () => {
-    await expect(loader(makeArgs())).rejects.toThrow("No article slug provided");
+    await expect(loader(makeArgs())).rejects.toThrow("Missing route param: articleSlug");
   });
 });

@@ -1,7 +1,7 @@
 import htmlParser from "html-react-parser";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
-import { createArticleRouteLoader } from "@scribe-atp/react-router-framework";
+import { fetchArticle, resolveDocumentUri } from "@scribe-atp/core";
 import { SITE_AUTHOR } from "~/config";
 
 const SITE_DESCRIPTION =
@@ -17,7 +17,15 @@ export function meta({ loaderData }: Route.MetaArgs) {
   ];
 }
 
-export const loader = createArticleRouteLoader(SITE_AUTHOR, "articleSlug");
+export async function loader({ request, params }: Route.LoaderArgs) {
+  const { articleSlug } = params;
+  if (!articleSlug) throw new Error("Missing route param: articleSlug");
+  const [article, documentUri] = await Promise.all([
+    fetchArticle(SITE_AUTHOR, articleSlug, request.signal),
+    resolveDocumentUri(SITE_AUTHOR, articleSlug, request.signal),
+  ]);
+  return { ...article, documentUri };
+}
 
 export default function Post({ loaderData }: Route.ComponentProps) {
   const { title, content } = loaderData;
