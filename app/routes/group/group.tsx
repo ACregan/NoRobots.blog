@@ -4,7 +4,7 @@ import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./group.module.css";
 import { fetchSite } from "@scribe-atp/core";
 import type { ArticleRef } from "@scribe-atp/core";
-import { SITE_AUTHOR, SITE_SLUG } from "~/config";
+import { SITE_AUTHOR, SITE_URL } from "~/config";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -19,7 +19,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const { groupSlug } = params;
-  const site = await fetchSite(SITE_AUTHOR, SITE_SLUG, request.signal);
+  const site = await fetchSite(SITE_AUTHOR, SITE_URL, request.signal);
   const group = site.groups.find((g) => g.slug === groupSlug);
   if (!group) throw new Response(`Group not found`, { status: 404 });
   return group;
