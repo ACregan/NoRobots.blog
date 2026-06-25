@@ -1,7 +1,7 @@
 import htmlParser from "html-react-parser";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
-import { fetchArticle } from "@scribe-atp/core";
+import { createArticleRouteLoader } from "@scribe-atp/react-router-framework";
 import { SITE_AUTHOR } from "~/config";
 
 const SITE_DESCRIPTION =
@@ -11,14 +11,13 @@ export function meta({ loaderData }: Route.MetaArgs) {
   return [
     { title: loaderData ? `${loaderData.title} | NoRobots.blog` : "NoRobots.blog" },
     { name: "description", content: loaderData?.description ?? SITE_DESCRIPTION },
+    ...(loaderData?.documentUri
+      ? [{ tagName: "link", rel: "site.standard.document", href: loaderData.documentUri }]
+      : []),
   ];
 }
 
-export async function loader({ request, params }: Route.LoaderArgs) {
-  const { articleSlug } = params;
-  if (!articleSlug) throw new Error("No article slug provided");
-  return fetchArticle(SITE_AUTHOR, articleSlug, request.signal);
-}
+export const loader = createArticleRouteLoader(SITE_AUTHOR, "articleSlug");
 
 export default function Post({ loaderData }: Route.ComponentProps) {
   const { title, content } = loaderData;
