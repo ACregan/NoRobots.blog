@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", () => ({ fetchArticleBySlug: vi.fn() }));
+vi.mock("@scribe-atp/core", () => ({ fetchArticleBySlug: vi.fn(), fetchSite: vi.fn() }));
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./post";
-import { fetchArticleBySlug } from "@scribe-atp/core";
-import type { Article } from "@scribe-atp/core";
+import { fetchArticleBySlug, fetchSite } from "@scribe-atp/core";
+import type { Article, Site } from "@scribe-atp/core";
 
 const mockArticle: Article = {
   title: "Hello World",
@@ -19,12 +19,23 @@ const mockArticle: Article = {
 };
 
 const documentUri = "at://did:plc:test/site.standard.document/3jxtctq7kqm2y";
+const publicationUri = "at://did:plc:test/site.standard.publication/test";
+
+const mockSite: Site = {
+  uri: publicationUri,
+  title: "Test Site",
+  url: "test.example.com",
+  urlPrefix: "",
+  groups: [],
+  ungroupedArticles: [],
+};
 
 const makeArgs = (articleSlug?: string) =>
   ({ request: new Request("https://example.com"), params: { articleSlug } }) as never;
 
 beforeEach(() => {
   vi.mocked(fetchArticleBySlug).mockResolvedValue({ article: mockArticle, uri: documentUri });
+  vi.mocked(fetchSite).mockResolvedValue(mockSite);
 });
 
 describe("post loader", () => {
@@ -34,6 +45,7 @@ describe("post loader", () => {
     expect(result.title).toBe("Hello World");
     expect(result.content).toBe("<h2>Hello</h2><p>Some content here.</p>");
     expect(result.documentUri).toBe(documentUri);
+    expect(result.publicationUri).toBe(publicationUri);
     expect(fetchArticleBySlug).toHaveBeenCalledWith(
       "test-author",
       "https://test.example.com",
