@@ -8,6 +8,7 @@ import { fetchSite } from "@scribe-atp/core";
 import type { Site } from "@scribe-atp/core";
 
 const mockSite: Site = {
+  uri: "at://did/site.standard.publication/test",
   title: "Test Site",
   url: "test.example.com",
   urlPrefix: "",
