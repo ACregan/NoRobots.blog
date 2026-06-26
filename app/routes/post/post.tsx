@@ -2,6 +2,7 @@ import htmlParser from "html-react-parser";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
 import { fetchArticleBySlug } from "@scribe-atp/core";
+import { LikeButton } from "@scribe-atp/social";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 
 const SITE_DESCRIPTION =
@@ -25,7 +26,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {
-  const { title, content } = loaderData;
+  const { title, content, documentUri } = loaderData;
   return (
     <div>
       <h1 className={styles.articleHeader}>{title}</h1>
@@ -33,6 +34,9 @@ export default function Post({ loaderData }: Route.ComponentProps) {
       <div className={styles.postContentContainer}>
         {htmlParser(content)}
       </div>
+      {documentUri && (
+        <LikeButton documentUri={documentUri} title={title} />
+      )}
     </div>
   );
 }
