@@ -42,10 +42,11 @@ describe("post loader", () => {
   it("fetches the article by slug and returns it with documentUri", async () => {
     const result = await loader(makeArgs("hello-world"));
 
-    expect(result.title).toBe("Hello World");
-    expect(result.content).toBe("<h2>Hello</h2><p>Some content here.</p>");
+    expect(result.article.title).toBe("Hello World");
+    expect(result.article.content).toBe("<h2>Hello</h2><p>Some content here.</p>");
     expect(result.documentUri).toBe(documentUri);
     expect(result.publicationUri).toBe(publicationUri);
+    expect(result.site).toBe(mockSite);
     expect(fetchArticleBySlug).toHaveBeenCalledWith(
       "test-author",
       "https://test.example.com",
