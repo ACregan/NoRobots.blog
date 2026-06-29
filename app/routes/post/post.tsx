@@ -1,9 +1,10 @@
-import htmlParser from "html-react-parser";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
 import { fetchArticleBySlug, fetchSite } from "@scribe-atp/core";
 import { articleMeta } from "@scribe-atp/react-router-framework";
+import { ScribeContent } from "@scribe-atp/react";
 import { LikeButton, SubscribeButton, ShareButton } from "@scribe-atp/social";
+import "@scribe-atp/styles";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 
 export function meta({ loaderData }: Route.MetaArgs) {
@@ -34,9 +35,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
     <div>
       <h1 className={styles.articleHeader}>{title}</h1>
       <p className={styles.author}>By {SITE_AUTHOR}</p>
-      <div className={styles.postContentContainer}>
-        {htmlParser(content)}
-      </div>
+      <ScribeContent html={content} className={styles.postContentContainer} />
       {documentUri && (
         <LikeButton documentUri={documentUri} title={title} />
       )}
