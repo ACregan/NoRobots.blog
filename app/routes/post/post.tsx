@@ -3,7 +3,7 @@ import type { Route } from "./+types/post";
 import styles from "./post.module.css";
 import { fetchArticleBySlug, fetchSite } from "@scribe-atp/core";
 import { articleMeta } from "@scribe-atp/react-router-framework";
-import { LikeButton, SubscribeButton } from "@scribe-atp/social";
+import { LikeButton, SubscribeButton, ShareButton } from "@scribe-atp/social";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 
 export function meta({ loaderData }: Route.MetaArgs) {
@@ -42,6 +42,9 @@ export default function Post({ loaderData }: Route.ComponentProps) {
       )}
       {publicationUri && (
         <SubscribeButton publicationUri={publicationUri} title="NoRobots" />
+      )}
+      {documentUri && publicationUri && (
+        <ShareButton documentUri={documentUri} publicationUri={publicationUri} title={title} />
       )}
     </div>
   );
