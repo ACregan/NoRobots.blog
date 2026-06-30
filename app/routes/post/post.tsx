@@ -37,7 +37,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
       <p className={styles.author}>By {SITE_AUTHOR}</p>
       <ScribeContent html={content} className={styles.postContentContainer} />
       {documentUri && (
-        <LikeButton documentUri={documentUri} title={title} />
+        <LikeButton documentUri={documentUri} publicationUri={publicationUri} title={title} />
       )}
       {publicationUri && (
         <SubscribeButton publicationUri={publicationUri} title="NoRobots" />
