@@ -68,10 +68,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:title" content="NoRobots.blog" />
-        <meta name="description" content="100% Human-produced content. No Language Models were used in the production of this weblog." />
+        <meta
+          name="description"
+          content="100% Human-produced content. No Language Models were used in the production of this weblog."
+        />
         <meta name="version" content={__APP_VERSION__} />
         <Meta />
         <Links />
+        <script
+          defer
+          src="https://analytics.perpetualsummer.ltd/script.js"
+          data-website-id="29e8b07a-5b06-47d2-a688-da9bb6bb5ce8"
+        ></script>
       </head>
       <body>
         <noscript>
@@ -87,7 +95,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Link
               to="/"
               onClick={() =>
-                trackClientAnalyticsEvent(AnalyticsEvent.headerHomepageLinkClick)
+                trackClientAnalyticsEvent(
+                  AnalyticsEvent.headerHomepageLinkClick,
+                )
               }
             >
               <NoRobotsLogo />
@@ -118,7 +128,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 to="https://atproto.com/"
                 onClick={() =>
                   trackClientAnalyticsEvent(
-                    AnalyticsEvent.footerAtprotoExternalLinkClick
+                    AnalyticsEvent.footerAtprotoExternalLinkClick,
                   )
                 }
               >
@@ -130,7 +140,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   to="https://bsky.app/profile/norobots.blog"
                   onClick={() =>
                     trackClientAnalyticsEvent(
-                      AnalyticsEvent.footerBlueskyExternalLinkClick
+                      AnalyticsEvent.footerBlueskyExternalLinkClick,
                     )
                   }
                 >
@@ -142,7 +152,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 to="https://bsky.app/profile/norobots.blog"
                 onClick={() =>
                   trackClientAnalyticsEvent(
-                    AnalyticsEvent.footerBlueskyExternalLinkClick
+                    AnalyticsEvent.footerBlueskyExternalLinkClick,
                   )
                 }
               >
