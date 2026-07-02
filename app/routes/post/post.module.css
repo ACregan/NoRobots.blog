@@ -1,6 +1,12 @@
+.articleHeaderContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
 .articleHeader {
   font-weight: 800;
   margin-bottom: 0;
+  margin-top: 0;
 }
 .postContentContainer {
   padding-bottom: 10rem;
@@ -10,7 +16,71 @@
   font-size: 1.6rem;
   color: rgba(140, 140, 140);
   margin-top: 0;
-  margin-bottom: 3.2rem;
+  margin-bottom: 0;
+}
+
+.socialButtonsContainer {
+  margin-top: 2rem;
+  min-width: 12rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+:global(.scribe-atp-like-button),
+:global(.scribe-atp-subscribe-button),
+:global(.scribe-atp-share-button) {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0 0.3rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+.socialIcon {
+  width: 2rem;
+  height: 2rem;
+}
+.socialIcon_active {
+  composes: socialIcon;
+}
+.socialLabel {
+  position: absolute;
+  top: -2rem;
+  left: 50%;
+  height: 2rem;
+  width: auto;
+  transform: translateX(-50%) translateY(1rem) scale(0.5);
+  box-sizing: border-box;
+  background: black;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  opacity: 0;
+  transition: all 0.1s ease-in-out;
+}
+/* HOVER ACTION */
+:global(.scribe-atp-like-button):hover .socialIcon,
+:global(.scribe-atp-subscribe-button):hover .socialIcon,
+:global(.scribe-atp-share-button):hover .socialIcon {
+  stroke: black;
+}
+:global(.scribe-atp-like-button):hover .socialIcon_active,
+:global(.scribe-atp-subscribe-button):hover .socialIcon_active,
+:global(.scribe-atp-share-button):hover .socialIcon_active {
+  stroke: black;
+  fill: black;
+}
+:global(.scribe-atp-like-button):hover .socialLabel,
+:global(.scribe-atp-subscribe-button):hover .socialLabel,
+:global(.scribe-atp-share-button):hover .socialLabel {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0rem) scale(1);
 }
 
 code {
