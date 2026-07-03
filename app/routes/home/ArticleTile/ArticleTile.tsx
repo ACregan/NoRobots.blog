@@ -1,7 +1,6 @@
 import { RightArrow } from "~/components/SvgImage/SvgImage";
 import styles from "./ArticleTile.module.css";
 import { Link } from "react-router";
-import { trackClientAnalyticsEvent, AnalyticsEvent } from "~/hooks/GoogleAnalytics";
 import { formatDate } from "~/utils";
 
 type ArticleTileProps = {
@@ -27,9 +26,6 @@ const ArticleTile = ({
     <Link
       to={`/${groupSlug}/${slug}`}
       className={styles.tileLink}
-      onClick={() =>
-        trackClientAnalyticsEvent(AnalyticsEvent.postLinkClick, { page: slug })
-      }
     >
       <div className={styles.tile}>
         <h2 className={styles.articleTitle}>{title}</h2>
