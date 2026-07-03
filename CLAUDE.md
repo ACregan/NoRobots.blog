@@ -43,7 +43,7 @@ Resource routes (`feed.ts`, `sitemap.ts`) export only a `loader` — no default 
 
 ## Analytics
 
-Google Analytics 4 via `app/hooks/GoogleAnalytics.ts`. Measurement ID: `G-Z6N3C35PLR` (in `app/config.ts`). Events are tracked client-side via `trackClientAnalyticsEvent`.
+Umami (cookie-free) via `https://analytics.perpetualsummer.ltd/script.js`. No GA integration.
 
 ## React Router future flags
 
