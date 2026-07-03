@@ -9,6 +9,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import styles from "./ErrorBoundary.module.css";
 import "./app.css";
 import "./assets/fonts/inter/inter.css";
 import "./root.css";
@@ -146,18 +147,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 >
                   BlueSky
                 </Link>
+                <Link
+                  className="bskyicon"
+                  to="https://bsky.app/profile/norobots.blog"
+                  onClick={() =>
+                    trackClientAnalyticsEvent(
+                      AnalyticsEvent.footerBlueskyExternalLinkClick,
+                    )
+                  }
+                >
+                  <BlueSky />
+                </Link>
               </p>
-              <Link
-                className="bskyicon"
-                to="https://bsky.app/profile/norobots.blog"
-                onClick={() =>
-                  trackClientAnalyticsEvent(
-                    AnalyticsEvent.footerBlueskyExternalLinkClick,
-                  )
-                }
-              >
-                <BlueSky />
-              </Link>
             </div>
             <div className="footer-col3">
               <PerpetualSummerSVG fill="white" />
@@ -192,17 +193,17 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <div className={styles.container}>
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre className={styles.stack}>
           <code>{stack}</code>
         </pre>
       )}
       <a href="/">
         <p>Return the Homepage</p>
       </a>
-    </main>
+    </div>
   );
 }
