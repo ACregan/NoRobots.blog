@@ -137,22 +137,33 @@ export function Layout({ children }: { children: React.ReactNode }) {
               >
                 <AtProtoLogo />
               </Link>
-              <p>
-                Follow us on{" "}
-                <Link
-                  to="https://bsky.app/profile/norobots.blog"
-                  onClick={() =>
-                    trackClientAnalyticsEvent(
-                      AnalyticsEvent.footerBlueskyExternalLinkClick,
-                    )
-                  }
-                >
-                  BlueSky
-                  <BlueSky />
-                </Link>
-              </p>
+              <p>Follow us on</p>
+              <Link
+                className={layoutStyles.blueSkyLink}
+                to="https://bsky.app/profile/norobots.blog"
+                onClick={() =>
+                  trackClientAnalyticsEvent(
+                    AnalyticsEvent.footerBlueskyExternalLinkClick,
+                  )
+                }
+              >
+                <BlueSky />
+                <span className={layoutStyles.blueSkyLinkLabel}>BlueSky</span>
+              </Link>
             </div>
             <div className={layoutStyles.footerCol3}>
+              <ul className={layoutStyles.linkList}>
+                <li>
+                  <Link to={"https://docs.scribe-atp.app/privacy/"}>
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link to={"https://scribe-cms.app/"}>Scribe CMS</Link>
+                </li>
+              </ul>
+            </div>
+            <div className={layoutStyles.footerCol4}>
               <PerpetualSummerSVG fill="white" />
             </div>
           </div>
