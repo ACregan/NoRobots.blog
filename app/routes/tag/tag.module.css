@@ -1,0 +1,9 @@
+.tagPage {
+  padding: 2rem 0;
+}
+
+.articlesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
