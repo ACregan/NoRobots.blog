@@ -20,12 +20,6 @@ import {
   NoRobotsLogo,
   PerpetualSummerSVG,
 } from "./components/SvgImage/SvgImage";
-import {
-  GoogleAnalyticsHead,
-  trackClientAnalyticsEvent,
-  AnalyticsEvent,
-} from "./hooks/GoogleAnalytics";
-
 declare const __APP_VERSION__: string;
 
 export const links: Route.LinksFunction = () => [
@@ -66,7 +60,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <GoogleAnalyticsHead />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:title" content="NoRobots.blog" />
@@ -84,24 +77,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         ></script>
       </head>
       <body>
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=G-Z6N3C35PLR"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          ></iframe>
-        </noscript>
         <header className={layoutStyles.header}>
           <div className={layoutStyles.headerContainer}>
             <Link
               className={layoutStyles.headerLink}
               to="/"
-              onClick={() =>
-                trackClientAnalyticsEvent(
-                  AnalyticsEvent.headerHomepageLinkClick,
-                )
-              }
             >
               <NoRobotsLogo />
               <h1 className={layoutStyles.headerTitle}>NoRobots.blog</h1>
@@ -129,11 +109,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <p>Built using</p>
               <Link
                 to="https://atproto.com/"
-                onClick={() =>
-                  trackClientAnalyticsEvent(
-                    AnalyticsEvent.footerAtprotoExternalLinkClick,
-                  )
-                }
               >
                 <AtProtoLogo />
               </Link>
@@ -141,11 +116,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 className={layoutStyles.blueSkyLink}
                 to="https://bsky.app/profile/norobots.blog"
-                onClick={() =>
-                  trackClientAnalyticsEvent(
-                    AnalyticsEvent.footerBlueskyExternalLinkClick,
-                  )
-                }
               >
                 <BlueSky />
                 <span className={layoutStyles.blueSkyLinkLabel}>BlueSky</span>
