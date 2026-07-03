@@ -11,12 +11,53 @@
 .postContentContainer {
   padding-bottom: 10rem;
 }
-.author {
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 0;
   font-weight: 300;
   font-size: 1.6rem;
   color: rgba(140, 140, 140);
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.author {
+  font-weight: 300;
+  font-size: 1.6rem;
+  color: rgba(140, 140, 140);
+}
+
+.metaSeparator {
+  composes: author;
+}
+
+.metaSeparator::before {
+  content: "·";
+  margin: 0 0.6rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.tag {
+  font-size: 1.4rem;
+  color: rgba(140, 140, 140);
+  text-decoration: none;
+  border: 1px solid rgba(140, 140, 140, 0.4);
+  padding: 0.2rem 0.8rem;
+  border-radius: 2rem;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tag:hover {
+  color: black;
+  border-color: black;
 }
 
 .socialButtonsContainer {
