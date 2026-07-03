@@ -9,7 +9,8 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
-import styles from "./ErrorBoundary.module.css";
+import errorStyles from "./ErrorBoundary.module.css";
+import layoutStyles from "./Layout.module.css";
 import "./app.css";
 import "./assets/fonts/inter/inter.css";
 import "./root.css";
@@ -91,9 +92,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
             style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
-        <header>
-          <div className="content-container">
+        <header className={layoutStyles.header}>
+          <div className={layoutStyles.headerContainer}>
             <Link
+              className={layoutStyles.headerLink}
               to="/"
               onClick={() =>
                 trackClientAnalyticsEvent(
@@ -102,28 +104,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
               }
             >
               <NoRobotsLogo />
-              <h1>NoRobots.blog</h1>
+              <h1 className={layoutStyles.headerTitle}>NoRobots.blog</h1>
             </Link>
-            <ul>
+            <ul className={layoutStyles.tagline}>
               <li>Tech.</li>
               <li>Creativity.</li>
               <li>Travel.</li>
             </ul>
           </div>
         </header>
-        <main>
-          <div className="content-container">{children}</div>
+        <main className={layoutStyles.main}>
+          <div className={layoutStyles.contentContainer}>{children}</div>
         </main>
-        <footer>
-          <div className="footer-container">
-            <div className="footer-col1">
+        <footer className={layoutStyles.footer}>
+          <div className={layoutStyles.footerContainer}>
+            <div className={layoutStyles.footerCol1}>
               <h1>NoRobots.blog</h1>
               <p>
                 100% Human-produced content. <br />
                 No Language Models were used in the production of this weblog.
               </p>
             </div>
-            <div className="footer-col2">
+            <div className={layoutStyles.footerCol2}>
               <p>Built using</p>
               <Link
                 to="https://atproto.com/"
@@ -146,21 +148,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   }
                 >
                   BlueSky
-                </Link>
-                <Link
-                  className="bskyicon"
-                  to="https://bsky.app/profile/norobots.blog"
-                  onClick={() =>
-                    trackClientAnalyticsEvent(
-                      AnalyticsEvent.footerBlueskyExternalLinkClick,
-                    )
-                  }
-                >
                   <BlueSky />
                 </Link>
               </p>
             </div>
-            <div className="footer-col3">
+            <div className={layoutStyles.footerCol3}>
               <PerpetualSummerSVG fill="white" />
             </div>
           </div>
@@ -193,11 +185,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={errorStyles.container}>
       <h1>{message}</h1>
       <p>{details}</p>
       {stack && (
-        <pre className={styles.stack}>
+        <pre className={errorStyles.stack}>
           <code>{stack}</code>
         </pre>
       )}
