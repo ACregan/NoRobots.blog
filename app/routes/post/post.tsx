@@ -126,7 +126,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         )}
         {textContent && (
           <span className={styles.metaSeparator}>
-            {estimateReadTime(textContent)}
+            {`${estimateReadTime(textContent)} Estimated Reading Time`}
           </span>
         )}
       </div>
