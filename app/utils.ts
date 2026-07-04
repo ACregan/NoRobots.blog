@@ -23,7 +23,7 @@ export function estimateReadTime(textContent: string): string {
     return `Approx ${hours} Hour${hours > 1 ? "s" : ""}`;
   }
   if (remainder === 60) {
-    return `Approx ${hours + 1} Hour${hours + 1 > 1 ? "s" : ""}`;
+    return `Approx ${hours + 1} Hours`;
   }
   return `${hours} Hour${hours > 1 ? "s" : ""}, ${remainder} Minute${remainder > 1 ? "s" : ""}`;
 }

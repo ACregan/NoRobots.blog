@@ -124,9 +124,11 @@ export default function Post({ loaderData }: Route.ComponentProps) {
             {formatDate(publishedAt)}
           </span>
         )}
-        <span className={styles.metaSeparator}>
-          {estimateReadTime(textContent ?? content)}
-        </span>
+        {textContent && (
+          <span className={styles.metaSeparator}>
+            {estimateReadTime(textContent)}
+          </span>
+        )}
       </div>
       {tags && tags.length > 0 && (
         <div className={styles.tags}>
