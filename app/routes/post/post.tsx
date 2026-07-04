@@ -6,7 +6,7 @@ import { ScribeContent } from "@scribe-atp/react";
 import { LikeButton, SubscribeButton, ShareButton } from "@scribe-atp/social";
 import "@scribe-atp/styles";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
-import { readingTime, formatDate } from "~/utils";
+import { estimateReadTime, formatDate } from "~/utils";
 import { Link } from "react-router";
 import {
   LikeIcon,
@@ -43,8 +43,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function Post({ loaderData }: Route.ComponentProps) {
   const { article, documentUri, publicationUri } = loaderData;
-  const { title, content, tags, publishedAt } = article;
-  const mins = readingTime(content);
+  const { title, content, textContent, tags, publishedAt } = article;
   return (
     <div>
       <div className={styles.articleHeaderContainer}>
@@ -121,9 +120,15 @@ export default function Post({ loaderData }: Route.ComponentProps) {
       <div className={styles.meta}>
         <span className={styles.author}>By {SITE_AUTHOR}</span>
         {publishedAt && (
-          <span className={styles.metaSeparator}>{formatDate(publishedAt)}</span>
+          <span className={styles.metaSeparator}>
+            {formatDate(publishedAt)}
+          </span>
         )}
-        <span className={styles.metaSeparator}>{mins} min read</span>
+        {textContent && (
+          <span className={styles.metaSeparator}>
+            {estimateReadTime(textContent)}
+          </span>
+        )}
       </div>
       {tags && tags.length > 0 && (
         <div className={styles.tags}>
