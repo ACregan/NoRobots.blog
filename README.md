@@ -1,6 +1,6 @@
 # norobots.blog
 
-Personal blog served from AT Protocol content. Posts are written in [Scribe CMS](https://scribe-cms.app) and stored in a Bluesky PDS under the `app.scribe.article` and `app.scribe.site` collections. This site fetches and renders that content publicly.
+Personal blog served from AT Protocol content. Posts are written in [Scribe CMS](https://scribe-cms.app) and stored in a Bluesky PDS under the site.standard lexicon compliant `site.standard.publication` and `site.standard.document` collections. This site fetches and renders that content publicly.
 
 ## Stack
 

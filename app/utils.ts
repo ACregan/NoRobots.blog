@@ -10,7 +10,7 @@ export function formatDate(iso: string): string {
 
 export function estimateReadTime(textContent: string): string {
   const words = textContent.trim().split(/\s+/).filter(Boolean).length;
-  const minutes = Math.max(1, Math.round(words / 200));
+  const minutes = Math.max(1, Math.round(words / 225));
 
   if (minutes < 60) {
     return `${minutes} Minute${minutes > 1 ? "s" : ""}`;
