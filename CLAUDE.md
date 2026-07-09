@@ -15,8 +15,8 @@ Personal blog driven by AT Protocol content via the Scribe SDK. Authors write in
 
 `app/config.ts`:
 ```ts
-SITE_AUTHOR = "anthonycregan.dev"
-SITE_SLUG    = "norobots-blog"
+SITE_AUTHOR = "norobots.blog"
+SITE_URL    = "https://norobots.blog"
 ```
 
 No `urlPrefix` — articles live directly under `/:groupSlug/:articleSlug`.
