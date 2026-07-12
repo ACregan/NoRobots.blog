@@ -4,7 +4,7 @@ Personal blog driven by AT Protocol content via the Scribe SDK. Authors write in
 
 ## Stack
 
-- **React Router v7** (framework mode, SSR enabled)
+- **React Router v8** (framework mode, SSR enabled)
 - **TypeScript** (strict mode)
 - **Vitest** + **@testing-library/react** — unit/component tests
 - **@scribe-atp/core** — `fetchSite`, `fetchArticle`, `generateFeed`, `getSitemapEntries`
@@ -44,10 +44,6 @@ Resource routes (`feed.ts`, `sitemap.ts`) export only a `loader` — no default 
 ## Analytics
 
 Umami (cookie-free) via `https://analytics.perpetualsummer.ltd/script.js`. No GA integration.
-
-## React Router future flags
-
-`react-router.config.ts` opts in to all v8 future flags (`v8_middleware`, `v8_splitRouteModules`, `v8_viteEnvironmentApi`, `v8_passThroughRequests`, `v8_trailingSlashAwareDataRequests`).
 
 ## CI (GitLab)
 
