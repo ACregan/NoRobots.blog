@@ -6,7 +6,7 @@ import { ScribeContent } from "@scribe-atp/react";
 import { LikeButton, SubscribeButton, ShareButton } from "@scribe-atp/social";
 import "@scribe-atp/styles";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
-import { estimateReadTime, formatDate } from "~/utils";
+import { estimateReadTime, formatDate, formatNameList } from "~/utils";
 import { Link } from "react-router";
 import {
   LikeIcon,
@@ -18,7 +18,6 @@ export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData) return [{ title: "NoRobots.blog" }];
   return [
     ...articleMeta(loaderData.article, loaderData.site),
-    { title: `${loaderData.article.title} | NoRobots.blog` },
     ...(loaderData.documentUri
       ? [
           {
@@ -43,7 +42,17 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function Post({ loaderData }: Route.ComponentProps) {
   const { article, documentUri, publicationUri } = loaderData;
-  const { title, content, textContent, tags, publishedAt } = article;
+  const { title, content, textContent, tags, publishedAt, contributors } =
+    article;
+  const writerNames = contributors
+    ?.filter((c) => c.role === "Writer")
+    .map((c) => c.displayName)
+    .filter((name): name is string => Boolean(name));
+  const author =
+    writerNames && writerNames.length > 0
+      ? formatNameList(writerNames)
+      : SITE_AUTHOR;
+
   return (
     <div>
       <div className={styles.articleHeaderContainer}>
@@ -118,7 +127,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
       <div className={styles.meta}>
-        <span className={styles.author}>By {SITE_AUTHOR}</span>
+        <span className={styles.author}>By {author}</span>
         {publishedAt && (
           <span className={styles.metaSeparator}>
             {formatDate(publishedAt)}

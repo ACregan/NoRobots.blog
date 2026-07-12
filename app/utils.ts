@@ -4,6 +4,15 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
 });
 
+const listFormatter = new Intl.ListFormat("en-GB", {
+  style: "long",
+  type: "conjunction",
+});
+
+export function formatNameList(names: string[]): string {
+  return listFormatter.format(names);
+}
+
 export function formatDate(iso: string): string {
   return dateFormatter.format(new Date(iso));
 }
