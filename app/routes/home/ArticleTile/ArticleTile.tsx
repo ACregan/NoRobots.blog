@@ -53,7 +53,7 @@ const ArticleTileOne = ({
       <div className={styles.contentContainer}>
         <div className={styles.textWrapper}>
           <h2 className={styles.articleTitle}>{title}</h2>
-          <p className={styles.authorName}>By {author}</p>
+          <p className={styles.authorName}>Written by {author}</p>
           {photographer && (
             <p className={styles.photographerName}>
               Photography by {photographer}
@@ -92,7 +92,7 @@ const ArticleTileTwo = ({
       <div className={styles.contentContainer}>
         <div className={styles.textWrapper}>
           <h2 className={styles.articleTitle}>{title}</h2>
-          <p className={styles.authorName}>By {author}</p>
+          <p className={styles.authorName}>Written by {author}</p>
           {photographer && (
             <p className={styles.photographerName}>
               Photography by {photographer}
@@ -131,7 +131,7 @@ const ArticleTileThree = ({
       <div className={styles.contentContainer}>
         <div className={styles.textWrapper}>
           <h2 className={styles.articleTitle}>{title}</h2>
-          <p className={styles.authorName}>By {author}</p>
+          <p className={styles.authorName}>Written by {author}</p>
           {photographer && (
             <p className={styles.photographerName}>
               Photography by {photographer}

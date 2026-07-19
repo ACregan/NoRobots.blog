@@ -123,7 +123,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
       <div className={styles.meta}>
-        <span className={styles.author}>By {author}</span>
+        <span className={styles.author}>Written by {author}</span>
         {photographer && (
           <span className={styles.metaSeparator}>
             Photography by {photographer}
