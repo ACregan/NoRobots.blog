@@ -30,6 +30,7 @@ type ArticleTileProps = {
   createdAt: string;
   updatedAt?: string;
   author?: string;
+  photographer?: string;
 };
 
 const ArticleTileOne = ({
@@ -42,6 +43,7 @@ const ArticleTileOne = ({
   createdAt,
   updatedAt,
   author,
+  photographer,
 }: ArticleTileProps) => {
   return (
     <div className={styles.tileOne}>
@@ -52,6 +54,11 @@ const ArticleTileOne = ({
         <div className={styles.textWrapper}>
           <h2 className={styles.articleTitle}>{title}</h2>
           <p className={styles.authorName}>By {author}</p>
+          {photographer && (
+            <p className={styles.photographerName}>
+              Photography by {photographer}
+            </p>
+          )}
           <p className={styles.createdDate}>{formatDate(createdAt)}</p>
           <div className={styles.contentPreviewContainer}>{description}</div>
         </div>
@@ -75,6 +82,7 @@ const ArticleTileTwo = ({
   createdAt,
   updatedAt,
   author,
+  photographer,
 }: ArticleTileProps) => {
   return (
     <div className={styles.tileTwo}>
@@ -85,6 +93,11 @@ const ArticleTileTwo = ({
         <div className={styles.textWrapper}>
           <h2 className={styles.articleTitle}>{title}</h2>
           <p className={styles.authorName}>By {author}</p>
+          {photographer && (
+            <p className={styles.photographerName}>
+              Photography by {photographer}
+            </p>
+          )}
           <p className={styles.createdDate}>{formatDate(createdAt)}</p>
           <div className={styles.contentPreviewContainer}>{description}</div>
         </div>
@@ -108,6 +121,7 @@ const ArticleTileThree = ({
   createdAt,
   updatedAt,
   author,
+  photographer,
 }: ArticleTileProps) => {
   return (
     <div className={styles.tileThree}>
@@ -118,6 +132,11 @@ const ArticleTileThree = ({
         <div className={styles.textWrapper}>
           <h2 className={styles.articleTitle}>{title}</h2>
           <p className={styles.authorName}>By {author}</p>
+          {photographer && (
+            <p className={styles.photographerName}>
+              Photography by {photographer}
+            </p>
+          )}
           <p className={styles.createdDate}>{formatDate(createdAt)}</p>
           <div className={styles.contentPreviewContainer}>{description}</div>
         </div>

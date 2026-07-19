@@ -5,6 +5,7 @@ import styles from "./home.module.css";
 import { createSiteLoader } from "@scribe-atp/react-router-framework";
 import type { ArticleRef, SiteGroup } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
+import { contributorCredits } from "~/utils";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -33,6 +34,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   const sizeLookup =
                     group.articles.length <= 2 ? [1, 1] : [1, 2, 2];
 
+                  const { author, photographer } = contributorCredits(
+                    article.contributors,
+                    SITE_AUTHOR,
+                  );
+
                   return (
                     <ArticleTile
                       key={article.uri}
@@ -44,7 +50,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                       description={article.description ?? ""}
                       createdAt={article.createdAt}
                       updatedAt={article.updatedAt}
-                      author={SITE_AUTHOR}
+                      author={author}
+                      photographer={photographer}
                     />
                   );
                 })}

@@ -155,14 +155,17 @@
 .articleTitle {
   margin-bottom: 0;
   overflow-wrap: break-word;
+  text-wrap: balance;
 }
 .authorName,
+.photographerName,
 .createdDate {
   margin: 0;
   font-size: 1.2rem;
   /* color: rgb(180, 180, 180); */
 }
-.authorName {
+.authorName,
+.photographerName {
   font-weight: 600;
 }
 .createdDate {

@@ -5,6 +5,7 @@ import styles from "./group.module.css";
 import { fetchSite } from "@scribe-atp/core";
 import type { ArticleRef } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
+import { contributorCredits } from "~/utils";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -31,20 +32,27 @@ export default function Group({ loaderData }: Route.ComponentProps) {
     <div className={styles.groupPage}>
       <GroupHeading>{title}</GroupHeading>
       <div className={styles.articlesContainer}>
-        {articles.map((article: ArticleRef) => (
-          <ArticleTile
-            key={article.uri}
-            size={2}
-            groupSlug={slug}
-            slug={article.slug ?? ""}
-            splashImage={article.splashImageUrl ?? undefined}
-            title={article.title}
-            description={article.description ?? ""}
-            createdAt={article.createdAt}
-            updatedAt={article.updatedAt}
-            author={SITE_AUTHOR}
-          />
-        ))}
+        {articles.map((article: ArticleRef) => {
+          const { author, photographer } = contributorCredits(
+            article.contributors,
+            SITE_AUTHOR,
+          );
+          return (
+            <ArticleTile
+              key={article.uri}
+              size={2}
+              groupSlug={slug}
+              slug={article.slug ?? ""}
+              splashImage={article.splashImageUrl ?? undefined}
+              title={article.title}
+              description={article.description ?? ""}
+              createdAt={article.createdAt}
+              updatedAt={article.updatedAt}
+              author={author}
+              photographer={photographer}
+            />
+          );
+        })}
       </div>
     </div>
   );
