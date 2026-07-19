@@ -34,7 +34,7 @@ describe("ArticleTile", () => {
 
   it("renders the author name", () => {
     renderTile();
-    expect(screen.getByText("By anthonycregan.dev")).toBeInTheDocument();
+    expect(screen.getByText("Written by anthonycregan.dev")).toBeInTheDocument();
   });
 
   it("renders the synopsis", () => {

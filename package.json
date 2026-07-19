@@ -18,7 +18,7 @@
     "@atproto/api": "^0.18.0",
     "@react-router/node": "^8.2.0",
     "@react-router/serve": "^8.2.0",
-    "@scribe-atp/core": "^3.0.0",
+    "@scribe-atp/core": "^3.9.0",
     "@scribe-atp/react": "^2.1.0",
     "@scribe-atp/react-router-framework": "^2.0.0",
     "@scribe-atp/social": "^1.2.0",
