@@ -13,6 +13,36 @@ export function formatNameList(names: string[]): string {
   return listFormatter.format(names);
 }
 
+interface Contributor {
+  role?: string;
+  displayName?: string;
+}
+
+export function namesForRole(
+  contributors: Contributor[] | undefined,
+  role: string,
+): string[] {
+  return (contributors ?? [])
+    .filter((c) => c.role === role)
+    .map((c) => c.displayName)
+    .filter((name): name is string => Boolean(name));
+}
+
+export function contributorCredits(
+  contributors: Contributor[] | undefined,
+  fallbackAuthor: string,
+): { author: string; photographer?: string } {
+  const writerNames = namesForRole(contributors, "Writer");
+  const photographerNames = namesForRole(contributors, "Photographer");
+  return {
+    author: writerNames.length > 0 ? formatNameList(writerNames) : fallbackAuthor,
+    photographer:
+      photographerNames.length > 0
+        ? formatNameList(photographerNames)
+        : undefined,
+  };
+}
+
 export function formatDate(iso: string): string {
   return dateFormatter.format(new Date(iso));
 }

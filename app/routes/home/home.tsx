@@ -5,6 +5,7 @@ import styles from "./home.module.css";
 import { createSiteLoader } from "@scribe-atp/react-router-framework";
 import type { ArticleRef, SiteGroup } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
+import { contributorCredits } from "~/utils";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -29,18 +30,31 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             <div key={group.slug} className={styles.articleGroup}>
               <GroupHeading link={group.slug}>{group.title}</GroupHeading>
               <div className={styles.articlesContainer}>
-                {group.articles.map((article: ArticleRef) => (
-                  <ArticleTile
-                    key={article.uri}
-                    groupSlug={group.slug}
-                    slug={article.slug ?? ""}
-                    title={article.title}
-                    description={article.description ?? ""}
-                    createdAt={article.createdAt}
-                    updatedAt={article.updatedAt}
-                    author={SITE_AUTHOR}
-                  />
-                ))}
+                {group.articles.map((article: ArticleRef, index: number) => {
+                  const sizeLookup =
+                    group.articles.length <= 2 ? [1, 1] : [1, 2, 2];
+
+                  const { author, photographer } = contributorCredits(
+                    article.contributors,
+                    SITE_AUTHOR,
+                  );
+
+                  return (
+                    <ArticleTile
+                      key={article.uri}
+                      size={sizeLookup[index] ?? 3}
+                      groupSlug={group.slug}
+                      slug={article.slug ?? ""}
+                      splashImage={article.splashImageUrl ?? undefined}
+                      title={article.title}
+                      description={article.description ?? ""}
+                      createdAt={article.createdAt}
+                      updatedAt={article.updatedAt}
+                      author={author}
+                      photographer={photographer}
+                    />
+                  );
+                })}
               </div>
             </div>
           );

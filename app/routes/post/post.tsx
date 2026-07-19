@@ -6,7 +6,7 @@ import { ScribeContent } from "@scribe-atp/react";
 import { LikeButton, SubscribeButton, ShareButton } from "@scribe-atp/social";
 import "@scribe-atp/styles";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
-import { estimateReadTime, formatDate, formatNameList } from "~/utils";
+import { contributorCredits, estimateReadTime, formatDate } from "~/utils";
 import { Link } from "react-router";
 import {
   LikeIcon,
@@ -44,14 +44,10 @@ export default function Post({ loaderData }: Route.ComponentProps) {
   const { article, documentUri, publicationUri } = loaderData;
   const { title, content, textContent, tags, publishedAt, contributors } =
     article;
-  const writerNames = contributors
-    ?.filter((c) => c.role === "Writer")
-    .map((c) => c.displayName)
-    .filter((name): name is string => Boolean(name));
-  const author =
-    writerNames && writerNames.length > 0
-      ? formatNameList(writerNames)
-      : SITE_AUTHOR;
+  const { author, photographer } = contributorCredits(
+    contributors,
+    SITE_AUTHOR,
+  );
 
   return (
     <div>
@@ -127,7 +123,12 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
       <div className={styles.meta}>
-        <span className={styles.author}>By {author}</span>
+        <span className={styles.author}>Written by {author}</span>
+        {photographer && (
+          <span className={styles.metaSeparator}>
+            Photography by {photographer}
+          </span>
+        )}
         {publishedAt && (
           <span className={styles.metaSeparator}>
             {formatDate(publishedAt)}

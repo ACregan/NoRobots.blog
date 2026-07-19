@@ -9,6 +9,7 @@ vi.mock("~/utils", () => ({
 import ArticleTile from "./ArticleTile";
 
 const defaultProps = {
+  size: 3,
   groupSlug: "creative-writing",
   slug: "my-article",
   title: "My Article Title",
@@ -33,7 +34,7 @@ describe("ArticleTile", () => {
 
   it("renders the author name", () => {
     renderTile();
-    expect(screen.getByText("By anthonycregan.dev")).toBeInTheDocument();
+    expect(screen.getByText("Written by anthonycregan.dev")).toBeInTheDocument();
   });
 
   it("renders the synopsis", () => {

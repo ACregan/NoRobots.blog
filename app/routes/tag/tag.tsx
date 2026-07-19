@@ -5,6 +5,7 @@ import styles from "./tag.module.css";
 import { fetchSite } from "@scribe-atp/core";
 import type { ArticleRef } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
+import { contributorCredits } from "~/utils";
 
 export function meta({ params }: Route.MetaArgs) {
   return [
@@ -34,18 +35,27 @@ export default function Tag({ loaderData }: Route.ComponentProps) {
     <div className={styles.tagPage}>
       <GroupHeading>#{tag}</GroupHeading>
       <div className={styles.articlesContainer}>
-        {matches.map(({ article, groupSlug }) => (
-          <ArticleTile
-            key={article.uri}
-            groupSlug={groupSlug}
-            slug={article.slug ?? ""}
-            title={article.title}
-            description={article.description ?? ""}
-            createdAt={article.createdAt}
-            updatedAt={article.updatedAt}
-            author={SITE_AUTHOR}
-          />
-        ))}
+        {matches.map(({ article, groupSlug }) => {
+          const { author, photographer } = contributorCredits(
+            article.contributors,
+            SITE_AUTHOR,
+          );
+          return (
+            <ArticleTile
+              key={article.uri}
+              size={1}
+              groupSlug={groupSlug}
+              slug={article.slug ?? ""}
+              splashImage={article.splashImageUrl ?? undefined}
+              title={article.title}
+              description={article.description ?? ""}
+              createdAt={article.createdAt}
+              updatedAt={article.updatedAt}
+              author={author}
+              photographer={photographer}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -2,7 +2,9 @@
   --group-heading-margin: 5rem;
 }
 .articlesContainer {
+  position: relative;
   display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
 }
 .articleGroup:first-of-type {
