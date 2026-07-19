@@ -34,8 +34,10 @@ export default function Group({ loaderData }: Route.ComponentProps) {
         {articles.map((article: ArticleRef) => (
           <ArticleTile
             key={article.uri}
+            size={2}
             groupSlug={slug}
             slug={article.slug ?? ""}
+            splashImage={article.splashImageUrl ?? undefined}
             title={article.title}
             description={article.description ?? ""}
             createdAt={article.createdAt}

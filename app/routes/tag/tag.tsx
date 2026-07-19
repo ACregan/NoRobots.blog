@@ -37,8 +37,10 @@ export default function Tag({ loaderData }: Route.ComponentProps) {
         {matches.map(({ article, groupSlug }) => (
           <ArticleTile
             key={article.uri}
+            size={1}
             groupSlug={groupSlug}
             slug={article.slug ?? ""}
+            splashImage={article.splashImageUrl ?? undefined}
             title={article.title}
             description={article.description ?? ""}
             createdAt={article.createdAt}
