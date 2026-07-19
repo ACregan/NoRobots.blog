@@ -1,22 +1,160 @@
+/* --- ImageFallback ------------ */
+.imageFallback {
+  background: var(--yellow);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem;
+  box-sizing: border-box;
+}
+
+.imageFallback > svg {
+  width: 50%;
+}
+
+/* --- TILE ONE ------------ */
+.tileOne {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-areas: "tileOne_pic tileOne_content";
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+  margin: 1rem 0;
+}
+.tileOne .splashImageContainer {
+  grid-area: tileOne_pic;
+  width: calc(100% - 1rem);
+  aspect-ratio: 1 / 1;
+}
+.tileOne .splashImageContainer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tileOne .contentContainer {
+  grid-area: tileOne_content;
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: space-between;
+  height: 100%;
+  min-width: 0;
+}
+.tileOne .contentContainer .textWrapper .articleTitle {
+  margin: 0;
+  font-size: 6rem;
+  text-decoration-thickness: 0.4rem;
+  text-underline-offset: 0.6rem;
+}
+
+/* --- TILE ONE ------------ */
+.tileTwo {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "tileTwo_picHeading"
+    "tileTwo_content";
+  width: 100%;
+  min-width: 0;
+}
+.tileTwo .imageHeadingContainer {
+  position: relative;
+  grid-area: tileTwo_picHeading;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 2 / 1;
+}
+.tileTwo .imageHeadingContainer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tileTwo .textWrapper > .articleTitle {
+  margin-top: 0;
+}
+.tileTwo .contentContainer {
+  grid-area: tileTwo_content;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+/* --- TILE THREE ------------ */
+.tileThree {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "tileThree_picHeading"
+    "tileThree_content";
+  width: 100%;
+  min-width: 0;
+}
+.tileThree .imageHeadingContainer {
+  position: relative;
+  grid-area: tileThree_picHeading;
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 2 / 1;
+}
+.tileThree .imageHeadingContainer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tileThree .textWrapper > .articleTitle {
+  margin-top: 0;
+}
+.tileThree .contentContainer {
+  grid-area: tileThree_content;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+/* PRE REFACTOR STYLES */
+
 .tileLink {
+  position: relative;
   text-decoration: none;
   color: black;
   display: inline-flex;
-  width: calc(50% - 1rem);
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+.tileLink:has(.tileOne) {
+  flex: 0 1 100%;
+}
+.tileLink:has(.tileTwo) {
+  flex: 0 1 calc(50% - 1rem);
+}
+.tileLink:has(.tileThree) {
+  flex: 0 1 calc((100% - 4rem) / 3);
 }
 .tileLink:hover .articleTitle {
   text-decoration: underline;
 }
 
-.tileLink:nth-of-type(odd) {
+/* .tileLink:nth-of-type(odd) {
   padding-right: 1rem;
 }
 .tileLink:nth-of-type(even) {
   padding-left: 1rem;
-}
+} */
 
 .articleTitle {
   margin-bottom: 0;
+  overflow-wrap: break-word;
 }
 .authorName,
 .createdDate {
@@ -31,8 +169,8 @@
   font-weight: 300;
 }
 .contentPreviewContainer {
-  height: 8rem;
-  font-size: 1.6rem;
+  /* height: 8rem; */
+  font-size: 2.2rem;
   overflow: hidden;
   margin-top: 2rem;
 }

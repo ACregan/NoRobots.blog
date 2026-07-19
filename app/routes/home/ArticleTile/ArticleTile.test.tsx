@@ -9,6 +9,7 @@ vi.mock("~/utils", () => ({
 import ArticleTile from "./ArticleTile";
 
 const defaultProps = {
+  size: 3,
   groupSlug: "creative-writing",
   slug: "my-article",
   title: "My Article Title",
