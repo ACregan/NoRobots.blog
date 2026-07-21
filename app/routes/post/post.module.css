@@ -1,7 +1,38 @@
+.articleImageContainer {
+  height: 33dvh;
+  position: absolute;
+  top: var(--headerElementHeight);
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+/* Blurry full-width bg. THIS LOOKED OK BUT DIDNT QUITE WORK
+.articleImageBackdrop {
+  width: calc(100% + 6rem);
+  height: calc(100% + 2rem);
+  object-fit: cover;
+  filter: blur(2rem);
+  transform: translate(-3rem, -1rem);
+} */
+.articleImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100rem;
+  height: 33dvh;
+  margin: 0 auto;
+  object-fit: cover;
+  object-position: center;
+}
+
 .articleHeaderContainer {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
+}
+.articleHeaderContainer.hasSplashImage {
+  margin-top: 33dvh;
 }
 .articleHeader {
   font-weight: 800;
@@ -52,7 +83,9 @@
   border: 1px solid rgba(140, 140, 140, 0.4);
   padding: 0.2rem 0.8rem;
   border-radius: 2rem;
-  transition: color 0.15s, border-color 0.15s;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
 }
 
 .tag:hover {
