@@ -8,6 +8,7 @@ import "@scribe-atp/styles";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits, estimateReadTime, formatDate } from "~/utils";
 import { Link } from "react-router";
+
 import {
   LikeIcon,
   ShareIcon,
@@ -42,16 +43,37 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function Post({ loaderData }: Route.ComponentProps) {
   const { article, documentUri, publicationUri } = loaderData;
-  const { title, content, textContent, tags, publishedAt, contributors } =
-    article;
+  const {
+    title,
+    content,
+    textContent,
+    tags,
+    publishedAt,
+    contributors,
+    coverImageUrl,
+  } = article;
   const { author, photographer } = contributorCredits(
     contributors,
     SITE_AUTHOR,
   );
 
   return (
-    <div>
-      <div className={styles.articleHeaderContainer}>
+    <>
+      {coverImageUrl && (
+        <div className={styles.articleImageContainer}>
+          {/* <!-- Blurry full-width bg. This didnt quite work, maybe revisit -->
+          <img src={coverImageUrl} className={styles.articleImageBackdrop} /> 
+          */}
+          <img
+            src={coverImageUrl}
+            alt={title}
+            className={styles.articleImage}
+          />
+        </div>
+      )}
+      <div
+        className={`${styles.articleHeaderContainer} ${coverImageUrl && styles.hasSplashImage}`}
+      >
         <h1 className={styles.articleHeader}>{title}</h1>
         <div className={styles.socialButtonsContainer}>
           {documentUri && (
@@ -150,6 +172,6 @@ export default function Post({ loaderData }: Route.ComponentProps) {
         </div>
       )}
       <ScribeContent html={content} className={styles.postContentContainer} />
-    </div>
+    </>
   );
 }
