@@ -155,6 +155,25 @@
 .blueSkyLink:hover > .blueSkyLinkLabel {
   color: yellow;
 }
+.rssLink {
+  display: flex;
+  align-items: center;
+  padding-top: 0.4rem;
+}
+.rssLink > svg {
+  margin-right: 0.3rem;
+  height: 2rem;
+  width: 2rem;
+}
+.rssLinkLabel {
+  font-size: 1.8rem;
+}
+.rssLink:hover > svg {
+  stroke: yellow;
+}
+.rssLink:hover > .rssLinkLabel {
+  color: yellow;
+}
 
 .footerCol2 svg {
   height: 2rem;

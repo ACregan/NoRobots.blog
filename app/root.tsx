@@ -19,6 +19,7 @@ import {
   BlueSky,
   NoRobotsLogo,
   PerpetualSummerSVG,
+  RssIcon,
 } from "./components/SvgImage/SvgImage";
 declare const __APP_VERSION__: string;
 
@@ -53,6 +54,12 @@ export const links: Route.LinksFunction = () => [
   {
     rel: "manifest",
     href: "/site.webmanifest",
+  },
+  {
+    rel: "alternate",
+    type: "application/rss+xml",
+    title: "NoRobots.blog",
+    href: "/feed.xml",
   },
 ];
 
@@ -119,6 +126,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
               >
                 <BlueSky />
                 <span className={layoutStyles.blueSkyLinkLabel}>BlueSky</span>
+              </Link>
+              <Link
+                className={layoutStyles.rssLink}
+                to="/feed.xml"
+              >
+                <RssIcon stroke="white" fill="none" />
+                <span className={layoutStyles.rssLinkLabel}>RSS Feed</span>
               </Link>
             </div>
             <div className={layoutStyles.footerCol3}>
