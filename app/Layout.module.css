@@ -114,6 +114,15 @@
   margin: 0;
   margin-top: 1rem;
   margin-right: 2rem;
+  align-items: center;
+  display: flex;
+}
+.atProtoLink {
+  display: inline-flex;
+  align-self: center;
+  height: 1.5rem;
+  width: 12rem;
+  margin-left: 0.5rem;
 }
 
 .footerCol2 {
@@ -206,10 +215,11 @@
   align-items: center;
   justify-content: flex-end;
   height: var(--footerElementHeight);
+  padding: 5rem;
+  box-sizing: border-box;
 }
-
-.footerCol3 svg {
-  width: 90%;
+.footerCol4 a svg {
+  width: 100%;
 }
 
 @media screen and (max-width: 799px) {
