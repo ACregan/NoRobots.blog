@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 describe("feed loader", () => {
-  it("fetches the configured site and generates a feed anchored to the request's own origin", async () => {
+  it("fetches the configured site and generates a feed anchored to the site's configured URL", async () => {
     await loader({ request: new Request("https://norobots.blog/feed.xml") });
 
     expect(fetchSite).toHaveBeenCalledWith(
@@ -31,17 +31,21 @@ describe("feed loader", () => {
       expect.any(AbortSignal),
     );
     expect(generateFeed).toHaveBeenCalledWith(mockSite, {
-      baseUrl: "https://norobots.blog",
-      feedUrl: "https://norobots.blog/feed.xml",
+      baseUrl: "https://test.example.com",
+      feedUrl: "https://test.example.com/feed.xml",
     });
   });
 
-  it("derives baseUrl/feedUrl from whatever origin the request actually arrived on", async () => {
-    await loader({ request: new Request("https://staging.norobots.blog/feed.xml") });
+  it("anchors baseUrl/feedUrl to SITE_URL regardless of what origin the request actually arrived on", async () => {
+    // Behind a reverse proxy that terminates TLS, request.url can report the
+    // wrong scheme/host (e.g. http://internal-host) even though the site is
+    // only ever served publicly at SITE_URL. baseUrl/feedUrl must not be
+    // derived from the request.
+    await loader({ request: new Request("http://staging.norobots.blog/feed.xml") });
 
     expect(generateFeed).toHaveBeenCalledWith(mockSite, {
-      baseUrl: "https://staging.norobots.blog",
-      feedUrl: "https://staging.norobots.blog/feed.xml",
+      baseUrl: "https://test.example.com",
+      feedUrl: "https://test.example.com/feed.xml",
     });
   });
 

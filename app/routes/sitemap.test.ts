@@ -25,7 +25,7 @@ function makeRequest(url = "https://norobots.blog/sitemap.xml") {
 }
 
 describe("sitemap loader", () => {
-  it("fetches the configured site and requests entries anchored to the request's own origin", async () => {
+  it("fetches the configured site and requests entries anchored to the site's configured URL", async () => {
     vi.mocked(getSitemapEntries).mockReturnValue([]);
 
     await loader(makeRequest());
@@ -35,7 +35,23 @@ describe("sitemap loader", () => {
       "https://test.example.com",
       expect.any(AbortSignal),
     );
-    expect(getSitemapEntries).toHaveBeenCalledWith(mockSite, { baseUrl: "https://norobots.blog" });
+    expect(getSitemapEntries).toHaveBeenCalledWith(mockSite, {
+      baseUrl: "https://test.example.com",
+    });
+  });
+
+  it("anchors baseUrl to SITE_URL regardless of what origin the request actually arrived on", async () => {
+    // Behind a reverse proxy that terminates TLS, request.url can report the
+    // wrong scheme/host (e.g. http://internal-host) even though the site is
+    // only ever served publicly at SITE_URL. baseUrl must not be derived
+    // from the request.
+    vi.mocked(getSitemapEntries).mockReturnValue([]);
+
+    await loader(makeRequest("http://staging.norobots.blog/sitemap.xml"));
+
+    expect(getSitemapEntries).toHaveBeenCalledWith(mockSite, {
+      baseUrl: "https://test.example.com",
+    });
   });
 
   it("wraps entries in a valid urlset with each entry as a url element", async () => {
