@@ -3,11 +3,12 @@ import ArticleTile from "./ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./home.module.css";
 import { createSiteLoader } from "@scribe-atp/react-router-framework";
+import { buildSiteUrl, generateSiteJsonLd } from "@scribe-atp/core";
 import type { ArticleRef, SiteGroup } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits } from "~/utils";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ loaderData }: Route.MetaArgs) {
   return [
     { title: "NoRobots.blog" },
     {
@@ -15,6 +16,15 @@ export function meta({}: Route.MetaArgs) {
       content:
         "Creative writing and news from the front line of the machine resistance. 100% Human-produced content. No Language Models were used in the production of this weblog.",
     },
+    // Keep the hand-written title/description above (deliberately more
+    // brand-voiced than the site record's) — just add the structured-data
+    // pieces that were missing entirely: canonical + WebSite JSON-LD.
+    ...(loaderData
+      ? [
+          { tagName: "link", rel: "canonical", href: buildSiteUrl(loaderData) },
+          { "script:ld+json": generateSiteJsonLd(loaderData) },
+        ]
+      : []),
   ];
 }
 
