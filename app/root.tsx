@@ -19,6 +19,7 @@ import {
   BlueSky,
   NoRobotsLogo,
   PerpetualSummerSVG,
+  RssIcon,
 } from "./components/SvgImage/SvgImage";
 declare const __APP_VERSION__: string;
 
@@ -54,6 +55,12 @@ export const links: Route.LinksFunction = () => [
     rel: "manifest",
     href: "/site.webmanifest",
   },
+  {
+    rel: "alternate",
+    type: "application/rss+xml",
+    title: "NoRobots.blog",
+    href: "/feed.xml",
+  },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -79,10 +86,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <header className={layoutStyles.header}>
           <div className={layoutStyles.headerContainer}>
-            <Link
-              className={layoutStyles.headerLink}
-              to="/"
-            >
+            <Link className={layoutStyles.headerLink} to="/">
               <NoRobotsLogo />
               <h1 className={layoutStyles.headerTitle}>NoRobots.blog</h1>
             </Link>
@@ -104,37 +108,53 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 100% Human-produced content. <br />
                 No Language Models were used in the production of this weblog.
               </p>
+              <p>
+                Built using
+                <Link
+                  className={layoutStyles.atProtoLink}
+                  to="https://atproto.com/"
+                  target="_blank"
+                >
+                  <AtProtoLogo />
+                </Link>{" "}
+              </p>
             </div>
             <div className={layoutStyles.footerCol2}>
-              <p>Built using</p>
-              <Link
-                to="https://atproto.com/"
-              >
-                <AtProtoLogo />
-              </Link>
-              <p>Follow us on</p>
+              <p>Follow us:</p>
               <Link
                 className={layoutStyles.blueSkyLink}
                 to="https://bsky.app/profile/norobots.blog"
+                target="_blank"
               >
                 <BlueSky />
                 <span className={layoutStyles.blueSkyLinkLabel}>BlueSky</span>
+              </Link>
+              <Link className={layoutStyles.rssLink} to="/feed.xml">
+                <RssIcon stroke="white" fill="none" />
+                <span className={layoutStyles.rssLinkLabel}>RSS Feed</span>
               </Link>
             </div>
             <div className={layoutStyles.footerCol3}>
               <ul className={layoutStyles.linkList}>
                 <li>
-                  <Link to={"https://docs.scribe-atp.app/privacy/"}>
+                  <Link
+                    to={"https://docs.scribe-atp.app/privacy/"}
+                    target="_blank"
+                  >
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link to={"https://scribe-cms.app/"}>Scribe CMS</Link>
+                  <Link to={"https://scribe-cms.app/"} target="_blank">
+                    Scribe CMS
+                  </Link>
                 </li>
               </ul>
             </div>
             <div className={layoutStyles.footerCol4}>
-              <PerpetualSummerSVG fill="white" />
+              <Link to={"https://perpetualsummer.ltd"} target="_blank">
+                <PerpetualSummerSVG fill="white" />
+              </Link>
             </div>
           </div>
         </footer>
