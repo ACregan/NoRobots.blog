@@ -1,10 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", () => ({ fetchSite: vi.fn() }));
+vi.mock("@scribe-atp/core", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@scribe-atp/core")>();
+  return { ...actual, fetchSite: vi.fn() };
+});
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./group";
 import { fetchSite } from "@scribe-atp/core";
+import { PdsFetchError } from "@scribe-atp/core";
 import type { Site } from "@scribe-atp/core";
 
 const mockSite: Site = {
@@ -38,19 +42,21 @@ const makeArgs = (groupSlug: string) =>
   ({ request: new Request("https://example.com"), params: { groupSlug } }) as never;
 
 beforeEach(() => {
-  vi.mocked(fetchSite).mockResolvedValue(mockSite);
+  vi.mocked(fetchSite).mockReset();
 });
 
 describe("group loader", () => {
-  it("returns the group matching the slug param", async () => {
+  it("returns the group matching the slug param on the fast path", async () => {
+    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+
     const result = await loader(makeArgs("technology"));
 
-    expect(result.slug).toBe("technology");
-    expect(result.title).toBe("Technology");
-    expect(result.articles).toHaveLength(1);
+    expect(result).toEqual({ status: "ok", data: mockSite.groups[0] });
   });
 
   it("throws a 404 Response when the slug does not match any group", async () => {
+    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+
     let thrown: unknown;
     try {
       await loader(makeArgs("nonexistent"));
@@ -60,5 +66,26 @@ describe("group loader", () => {
 
     expect(thrown).toBeInstanceOf(Response);
     expect((thrown as Response).status).toBe(404);
+  });
+
+  it("returns status retrying when the fetch fails transiently, resolving once a retry succeeds", async () => {
+    vi.mocked(fetchSite)
+      .mockRejectedValueOnce(new PdsFetchError("network blip"))
+      .mockResolvedValueOnce(mockSite);
+
+    vi.useFakeTimers();
+    try {
+      const result = await loader(makeArgs("technology"));
+      expect(result.status).toBe("retrying");
+
+      const assertion =
+        result.status === "retrying"
+          ? expect(result.data).resolves.toEqual(mockSite.groups[0])
+          : undefined;
+      await vi.runAllTimersAsync();
+      await assertion;
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

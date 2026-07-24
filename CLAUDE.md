@@ -29,9 +29,18 @@ No `urlPrefix` — articles live directly under `/:groupSlug/:articleSlug`.
 /:groupSlug/:articleSlug  post/post.tsx     — article via createArticleLoader
 feed.xml                  routes/feed.ts    — RSS 2.0 resource route
 sitemap.xml               routes/sitemap.ts — XML sitemap resource route
+robots.txt                routes/robots.ts  — plain-text resource route, points at sitemap.xml
 ```
 
-Resource routes (`feed.ts`, `sitemap.ts`) export only a `loader` — no default export.
+Resource routes (`feed.ts`, `sitemap.ts`, `robots.ts`) export only a `loader` — no default export.
+
+## SEO / discoverability
+
+- **Never derive the public origin from `request.url`.** `feed.ts`, `sitemap.ts`, and `robots.ts` all anchor to the `SITE_URL` config constant, not `new URL(request.url).origin`. Behind the nginx reverse proxy, `@react-router/serve` never trusts `X-Forwarded-Proto` (it's a sealed CLI with no `app.set('trust proxy', ...)` exposed), so `request.url` always reports `http://` in production regardless of the real scheme — anchoring to `SITE_URL` sidesteps that entirely. If you add another route that needs an absolute URL, follow the same pattern.
+- `root.tsx`'s `links` export includes the RSS `<link rel="alternate" type="application/rss+xml">` autodiscovery tag, and the footer (also in `root.tsx`) has a visible "RSS Feed" link (`RssIcon` in `SvgImage.tsx`) next to BlueSky.
+- Article pages (`post.tsx`) get a canonical link tag + `BlogPosting` JSON-LD automatically via `articleMeta` from `@scribe-atp/react-router-framework`.
+- The home page (`home.tsx`) adds a canonical link tag + `WebSite` JSON-LD via the standalone `buildSiteUrl`/`generateSiteJsonLd` helpers from `@scribe-atp/core` — deliberately not the full `siteMeta()` output, since that would replace the hand-written title/description with the (less brand-voiced) copy from the site record.
+- Group pages (`group.tsx`) and any future tag/listing pages do **not** have canonical/JSON-LD — their loaders only fetch the filtered group data, not the full `Site`. Known gap, deliberately left as-is (2026-07-23).
 
 ## Article links
 

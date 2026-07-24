@@ -1,14 +1,19 @@
+import { Suspense } from "react";
+import { Await } from "react-router";
 import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./home.module.css";
-import { createSiteLoader } from "@scribe-atp/react-router-framework";
-import { buildSiteUrl, generateSiteJsonLd } from "@scribe-atp/core";
-import type { ArticleRef, SiteGroup } from "@scribe-atp/core";
+import { fetchSite, buildSiteUrl, generateSiteJsonLd } from "@scribe-atp/core";
+import type { ArticleRef, Site, SiteGroup } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits } from "~/utils";
+import { fetchWithFastPath } from "~/lib/pdsRetry.server";
+import PdsRetrySpinner from "~/components/PdsRetrySpinner/PdsRetrySpinner";
+import PdsDownError from "~/components/PdsDownError/PdsDownError";
 
 export function meta({ loaderData }: Route.MetaArgs) {
+  const site = loaderData?.status === "ok" ? loaderData.data : undefined;
   return [
     { title: "NoRobots.blog" },
     {
@@ -19,19 +24,37 @@ export function meta({ loaderData }: Route.MetaArgs) {
     // Keep the hand-written title/description above (deliberately more
     // brand-voiced than the site record's) — just add the structured-data
     // pieces that were missing entirely: canonical + WebSite JSON-LD.
-    ...(loaderData
+    ...(site
       ? [
-          { tagName: "link", rel: "canonical", href: buildSiteUrl(loaderData) },
-          { "script:ld+json": generateSiteJsonLd(loaderData) },
+          { tagName: "link", rel: "canonical", href: buildSiteUrl(site) },
+          { "script:ld+json": generateSiteJsonLd(site) },
         ]
       : []),
   ];
 }
 
-export const loader = createSiteLoader(SITE_AUTHOR, SITE_URL);
+export async function loader({ request }: Route.LoaderArgs) {
+  return fetchWithFastPath(
+    () => fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+    request.signal,
+  );
+}
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { groups } = loaderData;
+  if (loaderData.status === "retrying") {
+    return (
+      <Suspense fallback={<PdsRetrySpinner />}>
+        <Await resolve={loaderData.data} errorElement={<PdsDownError />}>
+          {(site) => <HomeContent site={site} />}
+        </Await>
+      </Suspense>
+    );
+  }
+  return <HomeContent site={loaderData.data} />;
+}
+
+function HomeContent({ site }: { site: Site }) {
+  const { groups } = site;
   return (
     <>
       {groups.map((group: SiteGroup) => {

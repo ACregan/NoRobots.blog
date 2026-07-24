@@ -17,7 +17,7 @@ function makeArticle(overrides: Partial<ArticleRef> = {}): ArticleRef {
 
 function renderTag(matches: Array<{ article: ArticleRef; groupSlug: string }>) {
   const props = {
-    loaderData: { tag: "ai", matches },
+    loaderData: { status: "ok" as const, data: matches },
     params: { tag: "ai" },
   } as Route.ComponentProps;
   return render(

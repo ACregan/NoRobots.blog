@@ -1,10 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", () => ({ fetchSite: vi.fn() }));
+vi.mock("@scribe-atp/core", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@scribe-atp/core")>();
+  return { ...actual, fetchSite: vi.fn() };
+});
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./tag";
 import { fetchSite } from "@scribe-atp/core";
+import { PdsFetchError } from "@scribe-atp/core";
 import type { Site } from "@scribe-atp/core";
 
 const mockSite: Site = {
@@ -53,16 +57,18 @@ const makeArgs = (tag: string) =>
   ({ request: new Request("https://example.com"), params: { tag } }) as never;
 
 beforeEach(() => {
-  vi.mocked(fetchSite).mockResolvedValue(mockSite);
+  vi.mocked(fetchSite).mockReset();
 });
 
 describe("tag loader", () => {
   it("returns every article across every group tagged with the given tag", async () => {
+    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+
     const result = await loader(makeArgs("ai"));
 
-    expect(result.tag).toBe("ai");
-    expect(result.matches).toHaveLength(2);
-    expect(result.matches).toEqual(
+    expect(result.status).toBe("ok");
+    expect(result.status === "ok" && result.data).toHaveLength(2);
+    expect(result.status === "ok" && result.data).toEqual(
       expect.arrayContaining([
         { article: mockSite.groups[0].articles[0], groupSlug: "technology" },
         { article: mockSite.groups[1].articles[0], groupSlug: "travel" },
@@ -71,14 +77,18 @@ describe("tag loader", () => {
   });
 
   it("only returns articles tagged with the exact tag, not untagged articles", async () => {
+    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+
     const result = await loader(makeArgs("web"));
 
-    expect(result.matches).toEqual([
+    expect(result.status === "ok" && result.data).toEqual([
       { article: mockSite.groups[0].articles[0], groupSlug: "technology" },
     ]);
   });
 
   it("throws a 404 Response when no article carries the tag", async () => {
+    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+
     let thrown: unknown;
     try {
       await loader(makeArgs("nonexistent"));
@@ -88,5 +98,26 @@ describe("tag loader", () => {
 
     expect(thrown).toBeInstanceOf(Response);
     expect((thrown as Response).status).toBe(404);
+  });
+
+  it("returns status retrying when the fetch fails transiently, resolving once a retry succeeds", async () => {
+    vi.mocked(fetchSite)
+      .mockRejectedValueOnce(new PdsFetchError("network blip"))
+      .mockResolvedValueOnce(mockSite);
+
+    vi.useFakeTimers();
+    try {
+      const result = await loader(makeArgs("ai"));
+      expect(result.status).toBe("retrying");
+
+      const assertion =
+        result.status === "retrying"
+          ? expect(result.data).resolves.toHaveLength(2)
+          : undefined;
+      await vi.runAllTimersAsync();
+      await assertion;
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
