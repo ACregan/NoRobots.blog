@@ -1,6 +1,9 @@
+import { Suspense } from "react";
+import { Await } from "react-router";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
 import { fetchArticleBySlug, fetchSite } from "@scribe-atp/core";
+import type { Article } from "@scribe-atp/core";
 import { articleMeta } from "@scribe-atp/react-router-framework";
 import { ScribeContent } from "@scribe-atp/react";
 import { LikeButton, SubscribeButton, ShareButton } from "@scribe-atp/social";
@@ -8,6 +11,9 @@ import "@scribe-atp/styles";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits, estimateReadTime, formatDate } from "~/utils";
 import { Link } from "react-router";
+import { fetchWithFastPath } from "~/lib/pdsRetry.server";
+import PdsRetrySpinner from "~/components/PdsRetrySpinner/PdsRetrySpinner";
+import PdsDownError from "~/components/PdsDownError/PdsDownError";
 
 import {
   LikeIcon,
@@ -16,15 +22,18 @@ import {
 } from "~/components/SvgImage/SvgImage";
 
 export function meta({ loaderData }: Route.MetaArgs) {
-  if (!loaderData) return [{ title: "NoRobots.blog" }];
+  if (!loaderData || loaderData.status !== "ok") {
+    return [{ title: "NoRobots.blog" }];
+  }
+  const { article, documentUri, site } = loaderData.data;
   return [
-    ...articleMeta(loaderData.article, loaderData.site),
-    ...(loaderData.documentUri
+    ...articleMeta(article, site),
+    ...(documentUri
       ? [
           {
             tagName: "link",
             rel: "site.standard.document",
-            href: loaderData.documentUri,
+            href: documentUri,
           },
         ]
       : []),
@@ -34,15 +43,49 @@ export function meta({ loaderData }: Route.MetaArgs) {
 export async function loader({ request, params }: Route.LoaderArgs) {
   const { articleSlug } = params;
   if (!articleSlug) throw new Error("Missing route param: articleSlug");
-  const [{ article, uri: documentUri }, site] = await Promise.all([
-    fetchArticleBySlug(SITE_AUTHOR, SITE_URL, articleSlug, request.signal),
-    fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
-  ]);
-  return { article, documentUri, publicationUri: site.uri, site };
+  return fetchWithFastPath(async () => {
+    const [{ article, uri: documentUri }, site] = await Promise.all([
+      fetchArticleBySlug(SITE_AUTHOR, SITE_URL, articleSlug, request.signal),
+      fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+    ]);
+    return { article, documentUri, publicationUri: site.uri, site };
+  }, request.signal);
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {
-  const { article, documentUri, publicationUri } = loaderData;
+  if (loaderData.status === "retrying") {
+    return (
+      <Suspense fallback={<PdsRetrySpinner />}>
+        <Await resolve={loaderData.data} errorElement={<PdsDownError />}>
+          {(data) => (
+            <PostContent
+              article={data.article}
+              documentUri={data.documentUri}
+              publicationUri={data.publicationUri}
+            />
+          )}
+        </Await>
+      </Suspense>
+    );
+  }
+  return (
+    <PostContent
+      article={loaderData.data.article}
+      documentUri={loaderData.data.documentUri}
+      publicationUri={loaderData.data.publicationUri}
+    />
+  );
+}
+
+function PostContent({
+  article,
+  documentUri,
+  publicationUri,
+}: {
+  article: Article;
+  documentUri: string;
+  publicationUri: string;
+}) {
   const {
     title,
     content,
@@ -62,7 +105,7 @@ export default function Post({ loaderData }: Route.ComponentProps) {
       {coverImageUrl && (
         <div className={styles.articleImageContainer}>
           {/* <!-- Blurry full-width bg. This didnt quite work, maybe revisit -->
-          <img src={coverImageUrl} className={styles.articleImageBackdrop} /> 
+          <img src={coverImageUrl} className={styles.articleImageBackdrop} />
           */}
           <img
             src={coverImageUrl}
