@@ -25,11 +25,15 @@ export default function PdsDownError() {
     <div className={errorStyles.container}>
       <h1>We're having trouble connecting</h1>
       <p>
-        NoRobots.blog reads its content directly from the AT Protocol
-        network, and that connection is temporarily unavailable. This
-        usually resolves itself within a few minutes.
+        NoRobots.blog reads its content directly from the AT Protocol network,
+        and that connection is temporarily unavailable. This usually resolves
+        itself within a few minutes.
       </p>
-      <button type="button" onClick={() => window.location.reload()}>
+      <button
+        className={errorStyles.tryAgainButton}
+        type="button"
+        onClick={() => window.location.reload()}
+      >
         Try again
       </button>
     </div>
