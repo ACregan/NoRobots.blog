@@ -4,7 +4,7 @@ import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./home.module.css";
-import { fetchSite, buildSiteUrl, generateSiteJsonLd } from "@scribe-atp/core";
+import { fetchSite, buildSiteUrl, generateSiteJsonLd, NotFoundError } from "@scribe-atp/core";
 import type { ArticleRef, Site, SiteGroup } from "@scribe-atp/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits } from "~/utils";
@@ -34,10 +34,15 @@ export function meta({ loaderData }: Route.MetaArgs) {
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  return fetchWithFastPath(
-    () => fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
-    request.signal,
-  );
+  try {
+    return await fetchWithFastPath(
+      () => fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+      request.signal,
+    );
+  } catch (error) {
+    if (error instanceof NotFoundError) throw new Response("Not Found", { status: 404 });
+    throw error;
+  }
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {

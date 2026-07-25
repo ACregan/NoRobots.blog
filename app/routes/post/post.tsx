@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Await } from "react-router";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
-import { fetchArticleBySlug, fetchSite } from "@scribe-atp/core";
+import { fetchArticleBySlug, fetchSite, NotFoundError } from "@scribe-atp/core";
 import type { Article } from "@scribe-atp/core";
 import { articleMeta } from "@scribe-atp/react-router-framework";
 import { ScribeContent } from "@scribe-atp/react";
@@ -43,13 +43,18 @@ export function meta({ loaderData }: Route.MetaArgs) {
 export async function loader({ request, params }: Route.LoaderArgs) {
   const { articleSlug } = params;
   if (!articleSlug) throw new Error("Missing route param: articleSlug");
-  return fetchWithFastPath(async () => {
-    const [{ article, uri: documentUri }, site] = await Promise.all([
-      fetchArticleBySlug(SITE_AUTHOR, SITE_URL, articleSlug, request.signal),
-      fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
-    ]);
-    return { article, documentUri, publicationUri: site.uri, site };
-  }, request.signal);
+  try {
+    return await fetchWithFastPath(async () => {
+      const [{ article, uri: documentUri }, site] = await Promise.all([
+        fetchArticleBySlug(SITE_AUTHOR, SITE_URL, articleSlug, request.signal),
+        fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+      ]);
+      return { article, documentUri, publicationUri: site.uri, site };
+    }, request.signal);
+  } catch (error) {
+    if (error instanceof NotFoundError) throw new Response("Not Found", { status: 404 });
+    throw error;
+  }
 }
 
 export default function Post({ loaderData }: Route.ComponentProps) {
