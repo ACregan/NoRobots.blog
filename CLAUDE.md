@@ -7,8 +7,8 @@ Personal blog driven by AT Protocol content via the Scribe SDK. Authors write in
 - **React Router v8** (framework mode, SSR enabled)
 - **TypeScript** (strict mode)
 - **Vitest** + **@testing-library/react** — unit/component tests
-- **@scribe-atp/core** — `fetchSite`, `fetchArticle`, `generateFeed`, `getSitemapEntries`
-- **@scribe-atp/react-router-framework** — `createSiteLoader`, `createArticleLoader`
+- **@scribe-atp/core** — `fetchSite`, `fetchArticleBySlug`, `generateFeed`, `getSitemapEntries`, `withRetry`, `NotFoundError`
+- **@scribe-atp/react-router-framework** — `articleMeta` (canonical + JSON-LD for `post.tsx`'s `meta()`)
 - **npm** — package manager
 
 ## Scribe config
@@ -24,15 +24,32 @@ No `urlPrefix` — articles live directly under `/:groupSlug/:articleSlug`.
 ## Routes
 
 ```
-/                         home.tsx          — all groups + articles via createSiteLoader
+/                         home.tsx          — all groups + articles via fetchSite
 /:groupSlug               group/group.tsx   — single group view via fetchSite
-/:groupSlug/:articleSlug  post/post.tsx     — article via createArticleLoader
+/:groupSlug/:articleSlug  post/post.tsx     — article via fetchArticleBySlug + fetchSite
+tag/:tag                  tag/tag.tsx       — articles matching a tag via fetchSite
 feed.xml                  routes/feed.ts    — RSS 2.0 resource route
 sitemap.xml               routes/sitemap.ts — XML sitemap resource route
 robots.txt                routes/robots.ts  — plain-text resource route, points at sitemap.xml
+.well-known/site.standard.publication  routes/well-known-publication.ts — resolves the publication URI
 ```
 
 Resource routes (`feed.ts`, `sitemap.ts`, `robots.ts`) export only a `loader` — no default export.
+
+## PDS fetch resilience
+
+`home.tsx`, `post.tsx`, `group.tsx`, and `tag.tsx` all wrap their `@scribe-atp/core` calls in `app/lib/pdsRetry.server.ts`'s `fetchWithFastPath()`:
+
+1. **Fast path** — attempt the fetch once, synchronously, exactly as before. This is what runs on every normal request; `meta()`/canonical/JSON-LD stay untouched.
+2. **On failure** — if the error is `NotFoundError`, rethrow immediately (existing 404 handling runs, no retry, no spinner). Otherwise switch to streaming: return `{ status: "retrying", data: <promise> }` and let the loader return immediately.
+3. **In the component** — `status: "retrying"` renders `<Suspense fallback={<PdsRetrySpinner />}><Await resolve={...} errorElement={<PdsDownError />}>`. The promise is `withRetry(fn, { attempts: 4, signal })` — 4 more attempts with exponential backoff (300/600/1200/2400ms), for 5 total attempts including the fast path.
+4. **If all 5 fail** — `PdsDownError` renders a "PDS is down, try again" page with a reload button. It also checks `instanceof NotFoundError` for the rare case where a record disappears mid-retry, rendering the 404 UI instead.
+
+`app/entry.server.tsx` is a customized copy of React Router's default (not the stock template) — `streamTimeout` is raised to 20s (default is 4950ms) so the retry sequence has room to finish, plus a process-level `unhandledRejection` guard per React Router's streaming docs.
+
+`feed.ts`/`sitemap.ts`/`robots.ts` deliberately do **not** get this treatment — they're non-JSX resource routes with nothing to suspend.
+
+Same pattern, independently implemented per site (not shared code), on `perpetual-summer-ltd` and `anthonycregan.co.uk-2025`. `scribe-atp-reader` has its own richer version (3-way error classification, since visitors there can type any handle).
 
 ## SEO / discoverability
 
