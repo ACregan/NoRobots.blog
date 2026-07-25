@@ -92,7 +92,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <h1 className={layoutStyles.headerTitle}>NoRobots.blog</h1>
             </Link>
             <ul className={layoutStyles.tagline}>
-              <li>Tech.</li>
+              <li>Technology.</li>
               <li>Creativity.</li>
               <li>Travel.</li>
             </ul>
