@@ -1,0 +1,56 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.fourOhFourContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: perspective(400px) rotateX(36deg);
+  margin-bottom: 3rem;
+}
+.fourOhFourContainer h1 {
+  font-size: 20rem;
+  font-weight: 900;
+  margin: 0;
+  line-height: 80%;
+}
+.fourOhFourContainer h3 {
+  font-size: 4.8rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.backButton {
+  font-family: "InterVariable", "Inter", sans-serif;
+  font-weight: 600;
+  background: black;
+  border: none;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+.backButton svg {
+  width: 1.5rem;
+}
+.backButton span {
+  margin-left: 1rem;
+}
+
+.backButton:hover {
+}
+.backButton:hover svg {
+  fill: var(--yellow);
+}
+.backButton:hover span {
+  color: var(--yellow);
+}

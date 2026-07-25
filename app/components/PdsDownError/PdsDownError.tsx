@@ -1,5 +1,6 @@
 import { useAsyncError } from "react-router";
 import { NotFoundError } from "@scribe-atp/core";
+import FourOhFour from "~/components/FourOhFour/FourOhFour";
 import errorStyles from "~/ErrorBoundary.module.css";
 
 // Rendered by <Await errorElement> once all retries in a streamed PDS fetch
@@ -10,15 +11,7 @@ export default function PdsDownError() {
   const error = useAsyncError();
 
   if (error instanceof NotFoundError) {
-    return (
-      <div className={errorStyles.container}>
-        <h1>404</h1>
-        <p>The requested page could not be found.</p>
-        <a href="/">
-          <p>Return the Homepage</p>
-        </a>
-      </div>
-    );
+    return <FourOhFour />;
   }
 
   return (
