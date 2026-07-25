@@ -7,7 +7,7 @@ vi.mock("@scribe-atp/core", async (importOriginal) => {
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./post";
-import { fetchArticleBySlug, fetchSite, PdsFetchError } from "@scribe-atp/core";
+import { fetchArticleBySlug, fetchSite, PdsFetchError, NotFoundError } from "@scribe-atp/core";
 import type { Article, Site } from "@scribe-atp/core";
 
 const mockArticle: Article = {
@@ -64,6 +64,22 @@ describe("post loader", () => {
 
   it("throws when articleSlug param is missing", async () => {
     await expect(loader(makeArgs())).rejects.toThrow("Missing route param: articleSlug");
+  });
+
+  it("throws a 404 Response when the article slug does not exist", async () => {
+    vi.mocked(fetchArticleBySlug).mockRejectedValue(
+      new NotFoundError("Article not found: nonexistent"),
+    );
+
+    let thrown: unknown;
+    try {
+      await loader(makeArgs("nonexistent"));
+    } catch (e) {
+      thrown = e;
+    }
+
+    expect(thrown).toBeInstanceOf(Response);
+    expect((thrown as Response).status).toBe(404);
   });
 
   it("returns status retrying when either fetch fails transiently, resolving once a retry succeeds", async () => {

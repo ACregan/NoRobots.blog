@@ -215,11 +215,14 @@
   align-items: center;
   justify-content: flex-end;
   height: var(--footerElementHeight);
-  padding: 5rem;
+  padding: 6rem;
   box-sizing: border-box;
 }
 .footerCol4 a svg {
   width: 100%;
+}
+.footerCol4 a svg:hover {
+  fill: var(--yellow);
 }
 
 @media screen and (max-width: 799px) {

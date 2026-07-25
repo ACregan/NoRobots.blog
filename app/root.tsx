@@ -9,6 +9,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import FourOhFour from "./components/FourOhFour/FourOhFour";
 import errorStyles from "./ErrorBoundary.module.css";
 import layoutStyles from "./Layout.module.css";
 import "./app.css";
@@ -91,7 +92,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <h1 className={layoutStyles.headerTitle}>NoRobots.blog</h1>
             </Link>
             <ul className={layoutStyles.tagline}>
-              <li>Tech.</li>
+              <li>Technology.</li>
               <li>Creativity.</li>
               <li>Travel.</li>
             </ul>
@@ -170,16 +171,17 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return <FourOhFour />;
+  }
+
   let message = "There was a problem.";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+    message = "Error";
+    details = error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
