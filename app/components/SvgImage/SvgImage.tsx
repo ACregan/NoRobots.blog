@@ -190,6 +190,24 @@ const RightArrow = ({ fill = "black" }: { fill?: string }) => {
   );
 };
 
+// Mirror of RightArrow — same 8x8 viewBox and stroke widths, each path's x
+// coordinate reflected (x -> 8 - x) so it points left instead.
+const LeftArrow = ({ fill = "black" }: { fill?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlSpace="preserve"
+      fill={fill}
+      version="1.1"
+      viewBox="0 0 8 8"
+    >
+      <path d="M1.059 5.04 4.794 1.304 3.758.268l-3.736 3.735z"></path>
+      <path d="M7.976 3.157h-6.375V4.84H7.976z"></path>
+      <path d="M.017 3.997 3.752 7.734 4.788 6.7 1.053 2.96z"></path>
+    </svg>
+  );
+};
+
 const BlueSky = ({ fill = "white" }: { fill?: string }) => {
   return (
     <svg role="image" viewBox="0 0 64 57" fill={fill}>
@@ -313,6 +331,7 @@ export {
   PerpetualSummerSVG,
   NoRobotsLogo,
   RightArrow,
+  LeftArrow,
   BlueSky,
   AtProtoLogo,
   LikeIcon,
