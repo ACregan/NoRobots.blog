@@ -7,8 +7,8 @@ Personal blog driven by AT Protocol content via the Scribe SDK. Authors write in
 - **React Router v8** (framework mode, SSR enabled)
 - **TypeScript** (strict mode)
 - **Vitest** + **@testing-library/react** — unit/component tests
-- **@scribe-atp/core** — `fetchSite`, `fetchArticleBySlug`, `generateFeed`, `getSitemapEntries`, `withRetry`, `NotFoundError`
-- **@scribe-atp/react-router-framework** — `articleMeta` (canonical + JSON-LD for `post.tsx`'s `meta()`)
+- **@skyscribe-sdk/core** — `fetchSite`, `fetchArticleBySlug`, `generateFeed`, `getSitemapEntries`, `withRetry`, `NotFoundError`
+- **@skyscribe-sdk/react-router-framework** — `articleMeta` (canonical + JSON-LD for `post.tsx`'s `meta()`)
 - **npm** — package manager
 
 ## Scribe config
@@ -38,7 +38,7 @@ Resource routes (`feed.ts`, `sitemap.ts`, `robots.ts`) export only a `loader` �
 
 ## PDS fetch resilience
 
-`home.tsx`, `post.tsx`, `group.tsx`, and `tag.tsx` all wrap their `@scribe-atp/core` calls in `app/lib/pdsRetry.server.ts`'s `fetchWithFastPath()`:
+`home.tsx`, `post.tsx`, `group.tsx`, and `tag.tsx` all wrap their `@skyscribe-sdk/core` calls in `app/lib/pdsRetry.server.ts`'s `fetchWithFastPath()`:
 
 1. **Fast path** — attempt the fetch once, synchronously, exactly as before. This is what runs on every normal request; `meta()`/canonical/JSON-LD stay untouched.
 2. **On failure** — if the error is `NotFoundError`, rethrow immediately (existing 404 handling runs, no retry, no spinner). Otherwise switch to streaming: return `{ status: "retrying", data: <promise> }` and let the loader return immediately.
@@ -55,8 +55,8 @@ Same pattern, independently implemented per site (not shared code), on `perpetua
 
 - **Never derive the public origin from `request.url`.** `feed.ts`, `sitemap.ts`, and `robots.ts` all anchor to the `SITE_URL` config constant, not `new URL(request.url).origin`. Behind the nginx reverse proxy, `@react-router/serve` never trusts `X-Forwarded-Proto` (it's a sealed CLI with no `app.set('trust proxy', ...)` exposed), so `request.url` always reports `http://` in production regardless of the real scheme — anchoring to `SITE_URL` sidesteps that entirely. If you add another route that needs an absolute URL, follow the same pattern.
 - `root.tsx`'s `links` export includes the RSS `<link rel="alternate" type="application/rss+xml">` autodiscovery tag, and the footer (also in `root.tsx`) has a visible "RSS Feed" link (`RssIcon` in `SvgImage.tsx`) next to BlueSky.
-- Article pages (`post.tsx`) get a canonical link tag + `BlogPosting` JSON-LD automatically via `articleMeta` from `@scribe-atp/react-router-framework`.
-- The home page (`home.tsx`) adds a canonical link tag + `WebSite` JSON-LD via the standalone `buildSiteUrl`/`generateSiteJsonLd` helpers from `@scribe-atp/core` — deliberately not the full `siteMeta()` output, since that would replace the hand-written title/description with the (less brand-voiced) copy from the site record.
+- Article pages (`post.tsx`) get a canonical link tag + `BlogPosting` JSON-LD automatically via `articleMeta` from `@skyscribe-sdk/react-router-framework`.
+- The home page (`home.tsx`) adds a canonical link tag + `WebSite` JSON-LD via the standalone `buildSiteUrl`/`generateSiteJsonLd` helpers from `@skyscribe-sdk/core` — deliberately not the full `siteMeta()` output, since that would replace the hand-written title/description with the (less brand-voiced) copy from the site record.
 - Group pages (`group.tsx`) and any future tag/listing pages do **not** have canonical/JSON-LD — their loaders only fetch the filtered group data, not the full `Site`. Known gap, deliberately left as-is (2026-07-23).
 
 ## Article links

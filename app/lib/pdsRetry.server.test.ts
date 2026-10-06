@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { fetchWithFastPath } from "./pdsRetry.server";
-import { NotFoundError, PdsFetchError } from "@scribe-atp/core";
+import { NotFoundError, PdsFetchError } from "@skyscribe-sdk/core";
 
 beforeEach(() => {
   vi.useFakeTimers();
