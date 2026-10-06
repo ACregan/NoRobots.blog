@@ -1,4 +1,4 @@
-import { NotFoundError, withRetry } from "@scribe-atp/core";
+import { NotFoundError, withRetry } from "@skyscribe-sdk/core";
 
 export type PdsResult<T> =
   | { status: "ok"; data: T }

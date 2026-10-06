@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", () => ({ fetchSite: vi.fn(), generateFeed: vi.fn() }));
+vi.mock("@skyscribe-sdk/core", () => ({ fetchSite: vi.fn(), generateFeed: vi.fn() }));
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./feed";
-import { fetchSite, generateFeed } from "@scribe-atp/core";
-import type { Site } from "@scribe-atp/core";
+import { fetchSite, generateFeed } from "@skyscribe-sdk/core";
+import type { Site } from "@skyscribe-sdk/core";
 
 const mockSite: Site = {
   uri: "at://did/site.standard.publication/test",

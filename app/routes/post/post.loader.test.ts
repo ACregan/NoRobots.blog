@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@scribe-atp/core")>();
+vi.mock("@skyscribe-sdk/core", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@skyscribe-sdk/core")>();
   return { ...actual, fetchArticleBySlug: vi.fn(), fetchSite: vi.fn() };
 });
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./post";
-import { fetchArticleBySlug, fetchSite, PdsFetchError, NotFoundError } from "@scribe-atp/core";
-import type { Article, Site } from "@scribe-atp/core";
+import { fetchArticleBySlug, fetchSite, PdsFetchError, NotFoundError } from "@skyscribe-sdk/core";
+import type { Article, Site } from "@skyscribe-sdk/core";
 
 const mockArticle: Article = {
   title: "Hello World",

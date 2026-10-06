@@ -1,5 +1,5 @@
 import { useAsyncError } from "react-router";
-import { NotFoundError } from "@scribe-atp/core";
+import { NotFoundError } from "@skyscribe-sdk/core";
 import FourOhFour from "~/components/FourOhFour/FourOhFour";
 import errorStyles from "~/ErrorBoundary.module.css";
 

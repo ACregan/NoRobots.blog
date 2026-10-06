@@ -1,4 +1,4 @@
-import { fetchSite, getSitemapEntries } from "@scribe-atp/core";
+import { fetchSite, getSitemapEntries } from "@skyscribe-sdk/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 
 export async function loader({ request }: { request: Request }) {

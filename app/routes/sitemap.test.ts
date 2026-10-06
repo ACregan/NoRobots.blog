@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", () => ({ fetchSite: vi.fn(), getSitemapEntries: vi.fn() }));
+vi.mock("@skyscribe-sdk/core", () => ({ fetchSite: vi.fn(), getSitemapEntries: vi.fn() }));
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./sitemap";
-import { fetchSite, getSitemapEntries } from "@scribe-atp/core";
-import type { Site, SitemapEntry } from "@scribe-atp/core";
+import { fetchSite, getSitemapEntries } from "@skyscribe-sdk/core";
+import type { Site, SitemapEntry } from "@skyscribe-sdk/core";
 
 const mockSite: Site = {
   uri: "at://did/site.standard.publication/test",

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, it, expect } from "vitest";
 import Tag from "./tag";
-import type { ArticleRef } from "@scribe-atp/core";
+import type { ArticleRef } from "@skyscribe-sdk/core";
 import type { Route } from "./+types/tag";
 
 function makeArticle(overrides: Partial<ArticleRef> = {}): ArticleRef {

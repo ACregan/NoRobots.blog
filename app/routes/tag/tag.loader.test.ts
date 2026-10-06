@@ -1,15 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@scribe-atp/core", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@scribe-atp/core")>();
+vi.mock("@skyscribe-sdk/core", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@skyscribe-sdk/core")>();
   return { ...actual, fetchSite: vi.fn() };
 });
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./tag";
-import { fetchSite } from "@scribe-atp/core";
-import { PdsFetchError } from "@scribe-atp/core";
-import type { Site } from "@scribe-atp/core";
+import { fetchSite } from "@skyscribe-sdk/core";
+import { PdsFetchError } from "@skyscribe-sdk/core";
+import type { Site } from "@skyscribe-sdk/core";
 
 const mockSite: Site = {
   uri: "at://did/site.standard.publication/test",

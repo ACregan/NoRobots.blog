@@ -5,8 +5,8 @@ Personal blog served from AT Protocol content. Posts are written in [Scribe CMS]
 ## Stack
 
 - [React Router v7](https://reactrouter.com/) — framework mode, SSR
-- [`@scribe-atp/core`](https://www.npmjs.com/package/@scribe-atp/core) — AT Protocol content fetching
-- [`@scribe-atp/react-router-framework`](https://www.npmjs.com/package/@scribe-atp/react-router-framework) — site and article loaders
+- [`@skyscribe-sdk/core`](https://www.npmjs.com/package/@skyscribe-sdk/core) — AT Protocol content fetching
+- [`@skyscribe-sdk/react-router-framework`](https://www.npmjs.com/package/@skyscribe-sdk/react-router-framework) — site and article loaders
 - TypeScript (strict)
 - Vitest + Testing Library
 
