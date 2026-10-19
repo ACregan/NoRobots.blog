@@ -90,7 +90,7 @@
 
 .footerContainer {
   display: grid;
-  grid-template-columns: 30rem 20rem 16rem 1fr;
+  grid-template-columns: 34rem 20rem 16rem 1fr;
   grid-template-rows: 1fr;
   column-gap: 1px;
   height: var(--footerElementHeight);
@@ -117,12 +117,27 @@
   align-items: center;
   display: flex;
 }
+.footerCol1 p.builtWith {
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.skyScribeLink {
+  display: inline-flex;
+  align-self: center;
+  height: 2rem;
+}
+.skyScribeLink svg {
+  height: 100%;
+  width: auto;
+}
 .atProtoLink {
   display: inline-flex;
   align-self: center;
   height: 1.5rem;
-  width: 12rem;
-  margin-left: 0.5rem;
+}
+.atProtoLink svg {
+  height: 100%;
+  width: auto;
 }
 
 .footerCol2 {
@@ -238,12 +253,56 @@
   .tagline li {
     font-size: 1.1rem;
   }
+}
+
+/* Below 1024px the four footer columns no longer fit side by side */
+@media screen and (max-width: 1023px) {
+  /* Footer stacks into one column and grows to fit its content */
+  .footer {
+    height: auto;
+    padding: 3rem 1.8rem;
+  }
 
   .footerContainer {
-    grid-template-columns: 50% 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    height: auto;
+  }
+
+  .footerCol1 p {
+    margin-right: 0;
   }
 
   .footerCol2 {
-    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 2.4rem;
+  }
+  .footerCol2 > p {
+    flex-basis: 100%;
+  }
+
+  .footerCol3 {
+    height: auto;
+  }
+  .linkList {
+    display: flex;
+    gap: 2.4rem;
+  }
+  .linkList li {
+    margin: 0;
+  }
+
+  .footerCol4 {
+    height: auto;
+    padding: 0;
+    justify-content: flex-start;
+  }
+  .footerCol4 a {
+    display: block;
+    width: 18rem;
   }
 }

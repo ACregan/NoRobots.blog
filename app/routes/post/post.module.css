@@ -19,7 +19,8 @@
   top: 0;
   left: 0;
   right: 0;
-  width: 100rem;
+  width: 100%;
+  max-width: 100rem;
   height: 33dvh;
   margin: 0 auto;
   object-fit: cover;
@@ -162,6 +163,15 @@ code {
 }
 
 @media screen and (max-width: 799px) {
+  .articleHeaderContainer {
+    flex-direction: column;
+  }
+  .socialButtonsContainer {
+    align-self: flex-start;
+    margin-top: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
   .postContentContainer p {
     font-size: 1.8rem;
   }
