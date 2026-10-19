@@ -1,6 +1,6 @@
 {
   "name": "norobots",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -18,8 +18,8 @@
     "@atproto/api": "^0.18.0",
     "@react-router/node": "^8.2.0",
     "@react-router/serve": "^8.2.0",
-    "@skyscribe-sdk/core": "^4.0.0",
-    "@skyscribe-sdk/react": "^3.0.0",
+    "@skyscribe-sdk/core": "^4.1.0",
+    "@skyscribe-sdk/react": "^3.1.0",
     "@skyscribe-sdk/react-router-framework": "^2.1.4",
     "@skyscribe-sdk/social": "^1.5.0",
     "@skyscribe-sdk/styles": "^1.4.0",
