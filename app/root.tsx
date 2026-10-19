@@ -22,6 +22,7 @@ import {
   NoRobotsLogo,
   PerpetualSummerSVG,
   RssIcon,
+  SkyScribeLogo,
 } from "./components/SvgImage/SvgImage";
 declare const __APP_VERSION__: string;
 
@@ -110,15 +111,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 100% Human-produced content. <br />
                 No Language Models were used in the production of this weblog.
               </p>
-              <p>
-                Built using
+              <p className={layoutStyles.builtWith}>
+                Built with
+                <Link
+                  className={layoutStyles.skyScribeLink}
+                  to="https://skyscribe.app/"
+                  target="_blank"
+                >
+                  <SkyScribeLogo />
+                </Link>
+                on
                 <Link
                   className={layoutStyles.atProtoLink}
                   to="https://atproto.com/"
                   target="_blank"
                 >
                   <AtProtoLogo />
-                </Link>{" "}
+                </Link>
               </p>
             </div>
             <div className={layoutStyles.footerCol2}>
