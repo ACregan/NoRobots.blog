@@ -9,6 +9,7 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import { SiteAnalytics } from "@skyscribe-sdk/react";
 import FourOhFour from "./components/FourOhFour/FourOhFour";
 import errorStyles from "./ErrorBoundary.module.css";
 import layoutStyles from "./Layout.module.css";
@@ -160,6 +161,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </footer>
         <ScrollRestoration />
+        <SiteAnalytics />
         <Scripts />
       </body>
     </html>
