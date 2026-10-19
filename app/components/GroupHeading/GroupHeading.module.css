@@ -42,3 +42,9 @@
   transform: translateX(0rem);
   opacity: 1;
 }
+
+@media screen and (max-width: 799px) {
+  .heading {
+    font-size: 3.6rem;
+  }
+}

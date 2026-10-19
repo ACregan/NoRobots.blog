@@ -218,4 +218,47 @@
   .tileLink:nth-of-type(even) {
     padding: 0;
   }
+
+  /* Every tile is a single full-width column: image on top, text below */
+  .tileLink:has(.tileOne),
+  .tileLink:has(.tileTwo),
+  .tileLink:has(.tileThree) {
+    flex: 0 1 100%;
+    margin: 0;
+    width: 100%;
+  }
+
+  .tileOne,
+  .tileTwo,
+  .tileThree {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    margin: 0;
+  }
+  .tileOne {
+    grid-template-areas:
+      "tileOne_pic"
+      "tileOne_content";
+  }
+  .tileOne .splashImageContainer {
+    width: 100%;
+    aspect-ratio: 2 / 1;
+  }
+  .tileOne .contentContainer {
+    padding-left: 0;
+  }
+
+  .tileOne .contentContainer .textWrapper .articleTitle,
+  .tileTwo .textWrapper > .articleTitle,
+  .tileThree .textWrapper > .articleTitle {
+    margin-top: 1.2rem;
+    font-size: 3rem;
+    text-decoration-thickness: 0.3rem;
+    text-underline-offset: 0.4rem;
+  }
+
+  .contentPreviewContainer {
+    font-size: 1.8rem;
+    margin-top: 1.2rem;
+  }
 }
