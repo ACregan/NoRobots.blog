@@ -46,5 +46,6 @@
 @media screen and (max-width: 799px) {
   .heading {
     font-size: 3.6rem;
+    -webkit-text-stroke: 0.4rem white;
   }
 }
