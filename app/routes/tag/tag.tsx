@@ -21,6 +21,11 @@ export function meta({ params }: Route.MetaArgs) {
   return [
     { title: `#${params.tag} | NoRobots.blog` },
     { name: "description", content: `Articles tagged with #${params.tag}` },
+    // Tag pages only re-list article cards and aren't in the sitemap: keep
+    // them out of search results, but let crawlers follow through to the
+    // articles. No canonical alongside it, since Google treats the pair as
+    // conflicting signals.
+    { name: "robots", content: "noindex, follow" },
   ];
 }
 
