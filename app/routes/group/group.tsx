@@ -11,14 +11,17 @@ import { contributorCredits } from "~/utils";
 import { fetchWithFastPath } from "~/lib/pdsRetry.server";
 import PdsRetrySpinner from "~/components/PdsRetrySpinner/PdsRetrySpinner";
 import PdsDownError from "~/components/PdsDownError/PdsDownError";
+import { canonicalLink } from "~/lib/canonical";
 
-export function meta({ loaderData }: Route.MetaArgs) {
+export function meta({ loaderData, params }: Route.MetaArgs) {
   const group = loaderData?.status === "ok" ? loaderData.data : undefined;
   return [
     {
       title: group ? `${group.title} | NoRobots.blog` : "NoRobots.blog",
     },
     { name: "description", content: group?.title },
+    // No loaderData means the group wasn't found: no canonical on the 404
+    ...(loaderData ? [canonicalLink(`/${params.groupSlug}`)] : []),
   ];
 }
 
