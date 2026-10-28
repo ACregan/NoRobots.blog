@@ -162,7 +162,7 @@ function PostContent({
                     }
                   />
                   <span className={styles.socialLabel}>
-                    {isSubscribed ? "SUBSCRIBED" : "SUBSCRIBE"}
+                    {isSubscribed ? "FOLLOWING" : "FOLLOW"}
                   </span>
                 </>
               )}

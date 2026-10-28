@@ -149,7 +149,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <ul className={layoutStyles.linkList}>
                 <li>
                   <Link
-                    to={"https://docs.scribe-atp.app/privacy/"}
+                    to={"https://skyscribe.app/privacy"}
                     target="_blank"
                   >
                     Privacy Policy
