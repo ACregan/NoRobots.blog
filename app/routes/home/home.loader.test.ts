@@ -2,32 +2,31 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@skyscribe-sdk/core", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@skyscribe-sdk/core")>();
-  return { ...actual, fetchSite: vi.fn() };
+  return { ...actual, fetchPublication: vi.fn() };
 });
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./home";
-import { fetchSite, NotFoundError, PdsFetchError } from "@skyscribe-sdk/core";
-import type { Site } from "@skyscribe-sdk/core";
+import { fetchPublication, NotFoundError, PdsFetchError } from "@skyscribe-sdk/core";
+import type { StandardPublication } from "@skyscribe-sdk/core";
 
-const mockSite: Site = {
+const mockSite: StandardPublication = {
   uri: "at://did/site.standard.publication/test",
-  title: "Test Site",
-  url: "test.example.com",
-  urlPrefix: "",
-  groups: [],
-  ungroupedArticles: [],
+  name: "Test Site",
+  domain: "test.example.com",
+  basePath: "",
+  categories: [],
 };
 
 const makeArgs = () => ({ request: new Request("https://example.com") }) as never;
 
 beforeEach(() => {
-  vi.mocked(fetchSite).mockReset();
+  vi.mocked(fetchPublication).mockReset();
 });
 
 describe("home loader", () => {
   it("returns the site on the fast path", async () => {
-    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+    vi.mocked(fetchPublication).mockResolvedValue(mockSite);
 
     const result = await loader(makeArgs());
 
@@ -35,7 +34,7 @@ describe("home loader", () => {
   });
 
   it("throws a 404 Response when the site itself doesn't exist", async () => {
-    vi.mocked(fetchSite).mockRejectedValue(new NotFoundError("Site not found: https://test.example.com"));
+    vi.mocked(fetchPublication).mockRejectedValue(new NotFoundError("Site not found: https://test.example.com"));
 
     let thrown: unknown;
     try {
@@ -49,7 +48,7 @@ describe("home loader", () => {
   });
 
   it("returns status retrying when the fetch fails transiently, resolving once a retry succeeds", async () => {
-    vi.mocked(fetchSite)
+    vi.mocked(fetchPublication)
       .mockRejectedValueOnce(new PdsFetchError("network blip"))
       .mockResolvedValueOnce(mockSite);
 

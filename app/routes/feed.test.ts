@@ -1,23 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@skyscribe-sdk/core", () => ({ fetchSite: vi.fn(), generateFeed: vi.fn() }));
+vi.mock("@skyscribe-sdk/core", () => ({ fetchPublication: vi.fn(), generateFeed: vi.fn() }));
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./feed";
-import { fetchSite, generateFeed } from "@skyscribe-sdk/core";
-import type { Site } from "@skyscribe-sdk/core";
+import { fetchPublication, generateFeed } from "@skyscribe-sdk/core";
+import type { StandardPublication } from "@skyscribe-sdk/core";
 
-const mockSite: Site = {
+const mockSite: StandardPublication = {
   uri: "at://did/site.standard.publication/test",
-  title: "Test Site",
-  url: "test.example.com",
-  urlPrefix: "",
-  groups: [],
-  ungroupedArticles: [],
+  name: "Test Site",
+  domain: "test.example.com",
+  basePath: "",
+  categories: [],
 };
 
 beforeEach(() => {
-  vi.mocked(fetchSite).mockResolvedValue(mockSite);
+  vi.mocked(fetchPublication).mockResolvedValue(mockSite);
   vi.mocked(generateFeed).mockReturnValue("<rss>mock feed</rss>");
 });
 
@@ -25,7 +24,7 @@ describe("feed loader", () => {
   it("fetches the configured site and generates a feed anchored to the site's configured URL", async () => {
     await loader({ request: new Request("https://norobots.blog/feed.xml") });
 
-    expect(fetchSite).toHaveBeenCalledWith(
+    expect(fetchPublication).toHaveBeenCalledWith(
       "test-author",
       "https://test.example.com",
       expect.any(AbortSignal),

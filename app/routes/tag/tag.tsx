@@ -4,20 +4,21 @@ import type { Route } from "./+types/tag";
 import ArticleTile from "../home/ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./tag.module.css";
-import { fetchSite, NotFoundError } from "@skyscribe-sdk/core";
-import type { ArticleRef, Site } from "@skyscribe-sdk/core";
+import { fetchPublication, NotFoundError } from "@skyscribe-sdk/core";
+import type { DocumentRef, StandardPublication } from "@skyscribe-sdk/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits } from "~/utils";
 import { fetchWithFastPath } from "~/lib/pdsRetry.server";
 import PdsRetrySpinner from "~/components/PdsRetrySpinner/PdsRetrySpinner";
 import PdsDownError from "~/components/PdsDownError/PdsDownError";
+import { publicationLink } from "~/lib/publicationLink";
 
 interface TagMatch {
-  article: ArticleRef;
+  article: DocumentRef;
   groupSlug: string;
 }
 
-export function meta({ params }: Route.MetaArgs) {
+export function meta({ params, loaderData }: Route.MetaArgs) {
   return [
     { title: `#${params.tag} | NoRobots.blog` },
     { name: "description", content: `Articles tagged with #${params.tag}` },
@@ -26,13 +27,15 @@ export function meta({ params }: Route.MetaArgs) {
     // articles. No canonical alongside it, since Google treats the pair as
     // conflicting signals.
     { name: "robots", content: "noindex, follow" },
+    // Bluesky's link card needs the site.standard publication link on every page
+    ...(loaderData?.status === "ok" ? publicationLink(loaderData.publicationUri) : []),
   ];
 }
 
-function findTagMatches(site: Site, tag: string | undefined): TagMatch[] {
+function findTagMatches(site: StandardPublication, tag: string | undefined): TagMatch[] {
   const matches: TagMatch[] = [];
-  for (const group of site.groups) {
-    for (const article of group.articles) {
+  for (const group of site.categories) {
+    for (const article of group.documents) {
       if (article.tags?.includes(tag ?? "")) {
         matches.push({ article, groupSlug: group.slug });
       }
@@ -45,12 +48,16 @@ function findTagMatches(site: Site, tag: string | undefined): TagMatch[] {
 export async function loader({ request, params }: Route.LoaderArgs) {
   const { tag } = params;
   const result = await fetchWithFastPath(
-    () => fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+    () => fetchPublication(SITE_AUTHOR, SITE_URL, request.signal),
     request.signal,
   );
   if (result.status === "ok") {
     try {
-      return { status: "ok" as const, data: findTagMatches(result.data, tag) };
+      return {
+        status: "ok" as const,
+        data: findTagMatches(result.data, tag),
+        publicationUri: result.data.uri,
+      };
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw new Response("Tag not found", { status: 404 });
@@ -93,7 +100,7 @@ function TagContent({ tag, matches }: { tag: string; matches: TagMatch[] }) {
               size={1}
               groupSlug={groupSlug}
               slug={article.slug ?? ""}
-              splashImage={article.splashImageUrl ?? undefined}
+              splashImage={article.coverImageUrl ?? undefined}
               title={article.title}
               description={article.description ?? ""}
               createdAt={article.createdAt}

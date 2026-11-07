@@ -1,9 +1,9 @@
-import { fetchSite, getSitemapEntries } from "@skyscribe-sdk/core";
+import { fetchPublication, getSitemapEntries } from "@skyscribe-sdk/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 
 export async function loader({ request }: { request: Request }) {
   const origin = SITE_URL;
-  const site = await fetchSite(SITE_AUTHOR, SITE_URL, request.signal);
+  const site = await fetchPublication(SITE_AUTHOR, SITE_URL, request.signal);
   const entries = getSitemapEntries(site, { baseUrl: origin });
   const xml = [
     '<?xml version="1.0" encoding="UTF-8"?>',

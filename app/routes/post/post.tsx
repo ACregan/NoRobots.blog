@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import { Await } from "react-router";
 import type { Route } from "./+types/post";
 import styles from "./post.module.css";
-import { fetchArticleBySlug, fetchSite, NotFoundError } from "@skyscribe-sdk/core";
-import type { Article } from "@skyscribe-sdk/core";
-import { articleMeta } from "@skyscribe-sdk/react-router-framework";
+import { fetchDocumentBySlug, fetchPublication, NotFoundError } from "@skyscribe-sdk/core";
+import type { StandardDocument } from "@skyscribe-sdk/core";
+import { documentMeta } from "@skyscribe-sdk/react-router-framework";
 import { ScribeContent } from "@skyscribe-sdk/react";
 import { LikeButton, SubscribeButton, ShareButton } from "@skyscribe-sdk/social";
 import "@skyscribe-sdk/styles";
@@ -25,18 +25,10 @@ export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData || loaderData.status !== "ok") {
     return [{ title: "NoRobots.blog" }];
   }
-  const { article, documentUri, site } = loaderData.data;
+  const { article, site } = loaderData.data;
   return [
-    ...articleMeta(article, site),
-    ...(documentUri
-      ? [
-          {
-            tagName: "link",
-            rel: "site.standard.document",
-            href: documentUri,
-          },
-        ]
-      : []),
+    // Includes the site.standard publication and document link tags.
+    ...documentMeta(article, site),
   ];
 }
 
@@ -45,11 +37,11 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   if (!articleSlug) throw new Error("Missing route param: articleSlug");
   try {
     return await fetchWithFastPath(async () => {
-      const [{ article, uri: documentUri }, site] = await Promise.all([
-        fetchArticleBySlug(SITE_AUTHOR, SITE_URL, articleSlug, request.signal),
-        fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+      const [article, site] = await Promise.all([
+        fetchDocumentBySlug(SITE_AUTHOR, SITE_URL, articleSlug, request.signal),
+        fetchPublication(SITE_AUTHOR, SITE_URL, request.signal),
       ]);
-      return { article, documentUri, publicationUri: site.uri, site };
+      return { article, documentUri: article.uri, publicationUri: site.uri, site };
     }, request.signal);
   } catch (error) {
     if (error instanceof NotFoundError) throw new Response("Not Found", { status: 404 });
@@ -87,7 +79,7 @@ function PostContent({
   documentUri,
   publicationUri,
 }: {
-  article: Article;
+  article: StandardDocument;
   documentUri: string;
   publicationUri: string;
 }) {

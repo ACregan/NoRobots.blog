@@ -4,8 +4,9 @@ import type { Route } from "./+types/home";
 import ArticleTile from "./ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./home.module.css";
-import { fetchSite, buildSiteUrl, generateSiteJsonLd, NotFoundError } from "@skyscribe-sdk/core";
-import type { ArticleRef, Site, SiteGroup } from "@skyscribe-sdk/core";
+import { fetchPublication, buildPublicationUrl, generatePublicationJsonLd, NotFoundError } from "@skyscribe-sdk/core";
+import type { DocumentRef, StandardPublication, Category } from "@skyscribe-sdk/core";
+import { standardSiteLinks } from "@skyscribe-sdk/react-router-framework";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits } from "~/utils";
 import { fetchWithFastPath } from "~/lib/pdsRetry.server";
@@ -23,11 +24,13 @@ export function meta({ loaderData }: Route.MetaArgs) {
     },
     // Keep the hand-written title/description above (deliberately more
     // brand-voiced than the site record's) — just add the structured-data
-    // pieces that were missing entirely: canonical + WebSite JSON-LD.
+    // pieces that were missing entirely: canonical, the site.standard
+    // publication link (Bluesky's link card) and WebSite JSON-LD.
     ...(site
       ? [
-          { tagName: "link", rel: "canonical", href: buildSiteUrl(site) },
-          { "script:ld+json": generateSiteJsonLd(site) },
+          { tagName: "link", rel: "canonical", href: buildPublicationUrl(site) },
+          ...standardSiteLinks(site),
+          { "script:ld+json": generatePublicationJsonLd(site) },
         ]
       : []),
   ];
@@ -36,7 +39,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
 export async function loader({ request }: Route.LoaderArgs) {
   try {
     return await fetchWithFastPath(
-      () => fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+      () => fetchPublication(SITE_AUTHOR, SITE_URL, request.signal),
       request.signal,
     );
   } catch (error) {
@@ -58,19 +61,19 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return <HomeContent site={loaderData.data} />;
 }
 
-function HomeContent({ site }: { site: Site }) {
-  const { groups } = site;
+function HomeContent({ site }: { site: StandardPublication }) {
+  const { categories } = site;
   return (
     <>
-      {groups.map((group: SiteGroup) => {
-        if (group.articles.length > 0) {
+      {categories.map((group: Category) => {
+        if (group.documents.length > 0) {
           return (
             <div key={group.slug} className={styles.articleGroup}>
               <GroupHeading link={group.slug}>{group.title}</GroupHeading>
               <div className={styles.articlesContainer}>
-                {group.articles.map((article: ArticleRef, index: number) => {
+                {group.documents.map((article: DocumentRef, index: number) => {
                   const sizeLookup =
-                    group.articles.length <= 2 ? [1, 1] : [1, 2, 2];
+                    group.documents.length <= 2 ? [1, 1] : [1, 2, 2];
 
                   const { author, photographer } = contributorCredits(
                     article.contributors,
@@ -83,7 +86,7 @@ function HomeContent({ site }: { site: Site }) {
                       size={sizeLookup[index] ?? 3}
                       groupSlug={group.slug}
                       slug={article.slug ?? ""}
-                      splashImage={article.splashImageUrl ?? undefined}
+                      splashImage={article.coverImageUrl ?? undefined}
                       title={article.title}
                       description={article.description ?? ""}
                       createdAt={article.createdAt}
