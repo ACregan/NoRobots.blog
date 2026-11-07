@@ -2,15 +2,16 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@skyscribe-sdk/core", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@skyscribe-sdk/core")>();
-  return { ...actual, fetchArticleBySlug: vi.fn(), fetchSite: vi.fn() };
+  return { ...actual, fetchDocumentBySlug: vi.fn(), fetchPublication: vi.fn() };
 });
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./post";
-import { fetchArticleBySlug, fetchSite, PdsFetchError, NotFoundError } from "@skyscribe-sdk/core";
-import type { Article, Site } from "@skyscribe-sdk/core";
+import { fetchDocumentBySlug, fetchPublication, PdsFetchError, NotFoundError } from "@skyscribe-sdk/core";
+import type { StandardDocument, StandardPublication } from "@skyscribe-sdk/core";
 
-const mockArticle: Article = {
+const mockArticle: StandardDocument = {
+  uri: "at://did:plc:test/site.standard.document/3jxtctq7kqm2y",
   title: "Hello World",
   content: "<h2>Hello</h2><p>Some content here.</p>",
   path: "/hello-world",
@@ -21,26 +22,25 @@ const mockArticle: Article = {
   updatedAt: "2024-03-15T12:00:00Z",
 };
 
-const documentUri = "at://did:plc:test/site.standard.document/3jxtctq7kqm2y";
+const documentUri = mockArticle.uri;
 const publicationUri = "at://did:plc:test/site.standard.publication/test";
 
-const mockSite: Site = {
+const mockSite: StandardPublication = {
   uri: publicationUri,
-  title: "Test Site",
-  url: "test.example.com",
-  urlPrefix: "",
-  groups: [],
-  ungroupedArticles: [],
+  name: "Test Site",
+  domain: "test.example.com",
+  basePath: "",
+  categories: [],
 };
 
 const makeArgs = (articleSlug?: string) =>
   ({ request: new Request("https://example.com"), params: { articleSlug } }) as never;
 
 beforeEach(() => {
-  vi.mocked(fetchArticleBySlug).mockReset();
-  vi.mocked(fetchSite).mockReset();
-  vi.mocked(fetchArticleBySlug).mockResolvedValue({ article: mockArticle, uri: documentUri });
-  vi.mocked(fetchSite).mockResolvedValue(mockSite);
+  vi.mocked(fetchDocumentBySlug).mockReset();
+  vi.mocked(fetchPublication).mockReset();
+  vi.mocked(fetchDocumentBySlug).mockResolvedValue(mockArticle);
+  vi.mocked(fetchPublication).mockResolvedValue(mockSite);
 });
 
 describe("post loader", () => {
@@ -54,7 +54,7 @@ describe("post loader", () => {
     expect(result.data.documentUri).toBe(documentUri);
     expect(result.data.publicationUri).toBe(publicationUri);
     expect(result.data.site).toBe(mockSite);
-    expect(fetchArticleBySlug).toHaveBeenCalledWith(
+    expect(fetchDocumentBySlug).toHaveBeenCalledWith(
       "test-author",
       "https://test.example.com",
       "hello-world",
@@ -67,7 +67,7 @@ describe("post loader", () => {
   });
 
   it("throws a 404 Response when the article slug does not exist", async () => {
-    vi.mocked(fetchArticleBySlug).mockRejectedValue(
+    vi.mocked(fetchDocumentBySlug).mockRejectedValue(
       new NotFoundError("Article not found: nonexistent"),
     );
 
@@ -83,9 +83,9 @@ describe("post loader", () => {
   });
 
   it("returns status retrying when either fetch fails transiently, resolving once a retry succeeds", async () => {
-    vi.mocked(fetchArticleBySlug)
+    vi.mocked(fetchDocumentBySlug)
       .mockRejectedValueOnce(new PdsFetchError("network blip"))
-      .mockResolvedValueOnce({ article: mockArticle, uri: documentUri });
+      .mockResolvedValueOnce(mockArticle);
 
     vi.useFakeTimers();
     try {

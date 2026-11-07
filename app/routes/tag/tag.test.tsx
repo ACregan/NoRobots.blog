@@ -2,20 +2,20 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, it, expect } from "vitest";
 import Tag from "./tag";
-import type { ArticleRef } from "@skyscribe-sdk/core";
+import type { DocumentRef } from "@skyscribe-sdk/core";
 import type { Route } from "./+types/tag";
 
-function makeArticle(overrides: Partial<ArticleRef> = {}): ArticleRef {
+function makeArticle(overrides: Partial<DocumentRef> = {}): DocumentRef {
   return {
     uri: "at://did/site.standard.document/post-1",
     title: "An Article",
-    splashImageUrl: null,
+    coverImageUrl: null,
     createdAt: "2024-03-15T12:00:00.000Z",
     ...overrides,
   };
 }
 
-function renderTag(matches: Array<{ article: ArticleRef; groupSlug: string }>) {
+function renderTag(matches: Array<{ article: DocumentRef; groupSlug: string }>) {
   const props = {
     loaderData: { status: "ok" as const, data: matches },
     params: { tag: "ai" },

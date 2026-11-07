@@ -7,8 +7,8 @@ Personal blog driven by AT Protocol content via the Scribe SDK. Authors write in
 - **React Router v8** (framework mode, SSR enabled)
 - **TypeScript** (strict mode)
 - **Vitest** + **@testing-library/react** — unit/component tests
-- **@skyscribe-sdk/core** — `fetchSite`, `fetchArticleBySlug`, `generateFeed`, `getSitemapEntries`, `withRetry`, `NotFoundError`
-- **@skyscribe-sdk/react-router-framework** — `articleMeta` (canonical + JSON-LD for `post.tsx`'s `meta()`)
+- **@skyscribe-sdk/core** (5.x; site.standard names, SDK ADR 0005) — `fetchPublication`, `fetchDocumentBySlug`, `generateFeed`, `getSitemapEntries`, `withRetry`, `NotFoundError`
+- **@skyscribe-sdk/react-router-framework** — `documentMeta` (canonical, site.standard link tags + JSON-LD for `post.tsx`'s `meta()`), `standardSiteLinks`
 - **npm** — package manager
 
 ## Scribe config
@@ -19,15 +19,15 @@ SITE_AUTHOR = "norobots.blog"
 SITE_URL    = "https://norobots.blog"
 ```
 
-No `urlPrefix` — articles live directly under `/:groupSlug/:articleSlug`.
+No `basePath` — articles live directly under `/:groupSlug/:articleSlug`. The route params keep the site's own names (`groupSlug`, `articleSlug`): the post loader reads `articleSlug` itself, so the SDK's `documentSlug` default doesn't apply.
 
 ## Routes
 
 ```
-/                         home.tsx          — all groups + articles via fetchSite
-/:groupSlug               group/group.tsx   — single group view via fetchSite
-/:groupSlug/:articleSlug  post/post.tsx     — article via fetchArticleBySlug + fetchSite
-tag/:tag                  tag/tag.tsx       — articles matching a tag via fetchSite
+/                         home.tsx          — all Categories + their Documents via fetchPublication
+/:groupSlug               group/group.tsx   — single Category view via fetchPublication
+/:groupSlug/:articleSlug  post/post.tsx     — Document via fetchDocumentBySlug + fetchPublication
+tag/:tag                  tag/tag.tsx       — Documents matching a tag via fetchPublication
 feed.xml                  routes/feed.ts    — RSS 2.0 resource route
 sitemap.xml               routes/sitemap.ts — XML sitemap resource route
 robots.txt                routes/robots.ts  — plain-text resource route, points at sitemap.xml
@@ -55,9 +55,9 @@ Same pattern, independently implemented per site (not shared code), on `perpetua
 
 - **Never derive the public origin from `request.url`.** `feed.ts`, `sitemap.ts`, and `robots.ts` all anchor to the `SITE_URL` config constant, not `new URL(request.url).origin`. Behind the nginx reverse proxy, `@react-router/serve` never trusts `X-Forwarded-Proto` (it's a sealed CLI with no `app.set('trust proxy', ...)` exposed), so `request.url` always reports `http://` in production regardless of the real scheme — anchoring to `SITE_URL` sidesteps that entirely. If you add another route that needs an absolute URL, follow the same pattern.
 - `root.tsx`'s `links` export includes the RSS `<link rel="alternate" type="application/rss+xml">` autodiscovery tag, and the footer (also in `root.tsx`) has a visible "RSS Feed" link (`RssIcon` in `SvgImage.tsx`) next to BlueSky.
-- Article pages (`post.tsx`) get a canonical link tag + `BlogPosting` JSON-LD automatically via `articleMeta` from `@skyscribe-sdk/react-router-framework`.
-- The home page (`home.tsx`) adds a canonical link tag + `WebSite` JSON-LD via the standalone `buildSiteUrl`/`generateSiteJsonLd` helpers from `@skyscribe-sdk/core` — deliberately not the full `siteMeta()` output, since that would replace the hand-written title/description with the (less brand-voiced) copy from the site record.
-- Group pages (`group.tsx`) add `canonicalLink(`/${groupSlug}`)` (`app/lib/canonical.ts`, anchored to `SITE_URL`), but only when `loaderData` exists, so a 404 doesn't claim a canonical. No JSON-LD, because their loaders only return the filtered group, not the full `Site`. Any new static page should add `canonicalLink(path)` in its `meta()`.
+- **Every page carries `<link rel="site.standard.publication">`**, which Bluesky needs (server-rendered) to draw its Standard.site link card. Article pages (`post.tsx`) get it plus `site.standard.document`, a canonical link and `BlogPosting` JSON-LD from `documentMeta`. Home uses `standardSiteLinks(site)`. Group and tag loaders return `publicationUri` alongside their data on the fast path, and their `meta()` uses `app/lib/publicationLink.ts`. Any new page should add it too.
+- The home page (`home.tsx`) adds a canonical link tag + `WebSite` JSON-LD via the standalone `buildPublicationUrl`/`generatePublicationJsonLd` helpers from `@skyscribe-sdk/core` — deliberately not the full `publicationMeta()` output, since that would replace the hand-written title/description with the (less brand-voiced) copy from the site record.
+- Group pages (`group.tsx`) add `canonicalLink(`/${groupSlug}`)` (`app/lib/canonical.ts`, anchored to `SITE_URL`), but only when `loaderData` exists, so a 404 doesn't claim a canonical. No JSON-LD, because their loaders only return the filtered group (and the publication URI), not the full `StandardPublication`. Any new static page should add `canonicalLink(path)` in its `meta()`.
 - Tag pages (`tag.tsx`) are `noindex, follow` with no canonical. They only re-list article cards and aren't in the sitemap. Don't add a canonical alongside the noindex, since Google reads the pair as conflicting signals. If tags become real topic pages, switch to a self-canonical and add them to the sitemap.
 
 ## Article links

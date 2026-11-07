@@ -2,36 +2,36 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@skyscribe-sdk/core", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@skyscribe-sdk/core")>();
-  return { ...actual, fetchSite: vi.fn() };
+  return { ...actual, fetchPublication: vi.fn() };
 });
 vi.mock("~/config", () => ({ SITE_AUTHOR: "test-author", SITE_URL: "https://test.example.com" }));
 
 import { loader } from "./tag";
-import { fetchSite } from "@skyscribe-sdk/core";
+import { fetchPublication } from "@skyscribe-sdk/core";
 import { PdsFetchError } from "@skyscribe-sdk/core";
-import type { Site } from "@skyscribe-sdk/core";
+import type { StandardPublication } from "@skyscribe-sdk/core";
 
-const mockSite: Site = {
+const mockSite: StandardPublication = {
   uri: "at://did/site.standard.publication/test",
-  title: "Test Site",
-  url: "test.example.com",
-  urlPrefix: "",
-  groups: [
+  name: "Test Site",
+  domain: "test.example.com",
+  basePath: "",
+  categories: [
     {
       slug: "technology",
       title: "Technology",
-      articles: [
+      documents: [
         {
           uri: "at://did/site.standard.document/post-1",
           title: "Tagged in tech",
-          splashImageUrl: null,
+          coverImageUrl: null,
           createdAt: "2024-01-01T00:00:00Z",
           tags: ["ai", "web"],
         },
         {
           uri: "at://did/site.standard.document/post-2",
           title: "Untagged tech post",
-          splashImageUrl: null,
+          coverImageUrl: null,
           createdAt: "2024-01-02T00:00:00Z",
         },
       ],
@@ -39,30 +39,29 @@ const mockSite: Site = {
     {
       slug: "travel",
       title: "Travel",
-      articles: [
+      documents: [
         {
           uri: "at://did/site.standard.document/post-3",
           title: "Tagged in travel",
-          splashImageUrl: null,
+          coverImageUrl: null,
           createdAt: "2024-01-03T00:00:00Z",
           tags: ["ai"],
         },
       ],
     },
   ],
-  ungroupedArticles: [],
 };
 
 const makeArgs = (tag: string) =>
   ({ request: new Request("https://example.com"), params: { tag } }) as never;
 
 beforeEach(() => {
-  vi.mocked(fetchSite).mockReset();
+  vi.mocked(fetchPublication).mockReset();
 });
 
 describe("tag loader", () => {
   it("returns every article across every group tagged with the given tag", async () => {
-    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+    vi.mocked(fetchPublication).mockResolvedValue(mockSite);
 
     const result = await loader(makeArgs("ai"));
 
@@ -70,24 +69,24 @@ describe("tag loader", () => {
     expect(result.status === "ok" && result.data).toHaveLength(2);
     expect(result.status === "ok" && result.data).toEqual(
       expect.arrayContaining([
-        { article: mockSite.groups[0].articles[0], groupSlug: "technology" },
-        { article: mockSite.groups[1].articles[0], groupSlug: "travel" },
+        { article: mockSite.categories[0].documents[0], groupSlug: "technology" },
+        { article: mockSite.categories[1].documents[0], groupSlug: "travel" },
       ]),
     );
   });
 
   it("only returns articles tagged with the exact tag, not untagged articles", async () => {
-    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+    vi.mocked(fetchPublication).mockResolvedValue(mockSite);
 
     const result = await loader(makeArgs("web"));
 
     expect(result.status === "ok" && result.data).toEqual([
-      { article: mockSite.groups[0].articles[0], groupSlug: "technology" },
+      { article: mockSite.categories[0].documents[0], groupSlug: "technology" },
     ]);
   });
 
   it("throws a 404 Response when no article carries the tag", async () => {
-    vi.mocked(fetchSite).mockResolvedValue(mockSite);
+    vi.mocked(fetchPublication).mockResolvedValue(mockSite);
 
     let thrown: unknown;
     try {
@@ -101,7 +100,7 @@ describe("tag loader", () => {
   });
 
   it("returns status retrying when the fetch fails transiently, resolving once a retry succeeds", async () => {
-    vi.mocked(fetchSite)
+    vi.mocked(fetchPublication)
       .mockRejectedValueOnce(new PdsFetchError("network blip"))
       .mockResolvedValueOnce(mockSite);
 

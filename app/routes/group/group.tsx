@@ -4,14 +4,15 @@ import type { Route } from "./+types/group";
 import ArticleTile from "../home/ArticleTile/ArticleTile";
 import GroupHeading from "~/components/GroupHeading/GroupHeading";
 import styles from "./group.module.css";
-import { fetchSite, NotFoundError } from "@skyscribe-sdk/core";
-import type { ArticleRef, Site, SiteGroup } from "@skyscribe-sdk/core";
+import { fetchPublication, NotFoundError } from "@skyscribe-sdk/core";
+import type { DocumentRef, StandardPublication, Category } from "@skyscribe-sdk/core";
 import { SITE_AUTHOR, SITE_URL } from "~/config";
 import { contributorCredits } from "~/utils";
 import { fetchWithFastPath } from "~/lib/pdsRetry.server";
 import PdsRetrySpinner from "~/components/PdsRetrySpinner/PdsRetrySpinner";
 import PdsDownError from "~/components/PdsDownError/PdsDownError";
 import { canonicalLink } from "~/lib/canonical";
+import { publicationLink } from "~/lib/publicationLink";
 
 export function meta({ loaderData, params }: Route.MetaArgs) {
   const group = loaderData?.status === "ok" ? loaderData.data : undefined;
@@ -22,11 +23,13 @@ export function meta({ loaderData, params }: Route.MetaArgs) {
     { name: "description", content: group?.title },
     // No loaderData means the group wasn't found: no canonical on the 404
     ...(loaderData ? [canonicalLink(`/${params.groupSlug}`)] : []),
+    // Bluesky's link card needs the site.standard publication link on every page
+    ...(loaderData?.status === "ok" ? publicationLink(loaderData.publicationUri) : []),
   ];
 }
 
-function findGroup(site: Site, groupSlug: string | undefined): SiteGroup {
-  const group = site.groups.find((g) => g.slug === groupSlug);
+function findGroup(site: StandardPublication, groupSlug: string | undefined): Category {
+  const group = site.categories.find((g) => g.slug === groupSlug);
   if (!group) throw new NotFoundError(`Group not found: ${groupSlug}`);
   return group;
 }
@@ -34,12 +37,16 @@ function findGroup(site: Site, groupSlug: string | undefined): SiteGroup {
 export async function loader({ request, params }: Route.LoaderArgs) {
   const { groupSlug } = params;
   const result = await fetchWithFastPath(
-    () => fetchSite(SITE_AUTHOR, SITE_URL, request.signal),
+    () => fetchPublication(SITE_AUTHOR, SITE_URL, request.signal),
     request.signal,
   );
   if (result.status === "ok") {
     try {
-      return { status: "ok" as const, data: findGroup(result.data, groupSlug) };
+      return {
+        status: "ok" as const,
+        data: findGroup(result.data, groupSlug),
+        publicationUri: result.data.uri,
+      };
     } catch (error) {
       if (error instanceof NotFoundError) {
         throw new Response("Group not found", { status: 404 });
@@ -66,13 +73,13 @@ export default function Group({ loaderData }: Route.ComponentProps) {
   return <GroupContent group={loaderData.data} />;
 }
 
-function GroupContent({ group }: { group: SiteGroup }) {
-  const { slug, title, articles } = group;
+function GroupContent({ group }: { group: Category }) {
+  const { slug, title, documents: articles } = group;
   return (
     <div className={styles.groupPage}>
       <GroupHeading>{title}</GroupHeading>
       <div className={styles.articlesContainer}>
-        {articles.map((article: ArticleRef) => {
+        {articles.map((article: DocumentRef) => {
           const { author, photographer } = contributorCredits(
             article.contributors,
             SITE_AUTHOR,
@@ -83,7 +90,7 @@ function GroupContent({ group }: { group: SiteGroup }) {
               size={2}
               groupSlug={slug}
               slug={article.slug ?? ""}
-              splashImage={article.splashImageUrl ?? undefined}
+              splashImage={article.coverImageUrl ?? undefined}
               title={article.title}
               description={article.description ?? ""}
               createdAt={article.createdAt}
