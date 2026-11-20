@@ -1,7 +1,11 @@
+// Pinned to UTC: the server renders in UTC, so a reader's browser in
+// another time zone would print a different day for a late-evening post
+// and hydration would fail (React #418).
 const dateFormatter = new Intl.DateTimeFormat("en-GB", {
   year: "numeric",
   month: "long",
   day: "numeric",
+  timeZone: "UTC",
 });
 
 const listFormatter = new Intl.ListFormat("en-GB", {
