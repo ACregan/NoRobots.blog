@@ -80,8 +80,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="version" content={__APP_VERSION__} />
         <Meta />
         <Links />
+        {/* async, not defer: a deferred script runs before the app's own
+            module scripts, so a hung analytics server stalled hydration */}
         <script
-          defer
+          async
           src="https://analytics.perpetualsummer.ltd/script.js"
           data-website-id="29e8b07a-5b06-47d2-a688-da9bb6bb5ce8"
         ></script>
