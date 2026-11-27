@@ -1,11 +1,16 @@
 import { PassThrough } from "node:stream";
 
-import type { EntryContext, RouterContextProvider } from "react-router";
+import type {
+  EntryContext,
+  HandleErrorFunction,
+  RouterContextProvider,
+} from "react-router";
 import { createReadableStreamFromReadable } from "@react-router/node";
 import { ServerRouter } from "react-router";
 import { isbot } from "isbot";
 import type { RenderToPipeableStreamOptions } from "react-dom/server";
 import { renderToPipeableStream } from "react-dom/server";
+import { shouldLogServerError } from "./lib/serverErrorLogging";
 
 // Default is 5s. Raised so the PDS retry sequence (up to 4 retries with
 // backoff, ~4.5s of waiting alone, plus real fetch latency on top) has room
@@ -20,6 +25,12 @@ export const streamTimeout = 20_000;
 process.on("unhandledRejection", (reason) => {
   console.error("Unhandled Rejection:", reason);
 });
+
+// Replaces React Router's default logging: 4xx responses and aborted
+// requests aren't logged (see shouldLogServerError).
+export const handleError: HandleErrorFunction = (error, { request }) => {
+  if (shouldLogServerError(error, request)) console.error(error);
+};
 
 export default function handleRequest(
   request: Request,
