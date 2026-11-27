@@ -45,7 +45,7 @@ Resource routes (`feed.ts`, `sitemap.ts`, `robots.ts`) export only a `loader` �
 3. **In the component** — `status: "retrying"` renders `<Suspense fallback={<PdsRetrySpinner />}><Await resolve={...} errorElement={<PdsDownError />}>`. The promise is `withRetry(fn, { attempts: 4, signal })` — 4 more attempts with exponential backoff (300/600/1200/2400ms), for 5 total attempts including the fast path.
 4. **If all 5 fail** — `PdsDownError` renders a "PDS is down, try again" page with a reload button. It also checks `instanceof NotFoundError` for the rare case where a record disappears mid-retry, rendering the 404 UI instead.
 
-`app/entry.server.tsx` is a customized copy of React Router's default (not the stock template) — `streamTimeout` is raised to 20s (default is 4950ms) so the retry sequence has room to finish, plus a process-level `unhandledRejection` guard per React Router's streaming docs.
+`app/entry.server.tsx` is a customized copy of React Router's default (not the stock template) — `streamTimeout` is raised to 20s (default is 4950ms) so the retry sequence has room to finish, plus a process-level `unhandledRejection` guard per React Router's streaming docs. Since 1.8.4 it also exports `handleError`, which skips React Router's 4xx route responses (bot scans for `/www.bak` etc. filled the PM2 error log with "No route matches URL" stack traces) and aborted requests: the rule is `app/lib/serverErrorLogging.ts`, the same as anthonycregan.co.uk 1.13.2.
 
 `feed.ts`/`sitemap.ts`/`robots.ts` deliberately do **not** get this treatment — they're non-JSX resource routes with nothing to suspend.
 
